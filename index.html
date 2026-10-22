@@ -6,9 +6,6 @@
     <title>Laporan Keuangan Perumahan Tikung Kota Baru</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
@@ -16,25 +13,19 @@
     <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3">
-                <!-- SVG Logo Paguyuban Tikung Kota Baru -->
                 <div class="w-12 h-12 flex-shrink-0 bg-white rounded-full p-1 shadow-md flex items-center justify-center">
                     <svg viewBox="0 0 200 200" class="w-full h-full">
                         <circle cx="100" cy="100" r="95" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
                         <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#0f172a" stroke-width="3"/>
-                        <!-- Sun rays & Sky -->
                         <path d="M 40 100 Q 100 20 160 100 Z" fill="#fde047" opacity="0.6"/>
-                        <!-- Houses -->
                         <polygon points="100,50 60,90 140,90" fill="#1e3a8a"/>
                         <polygon points="60,90 30,115 90,115" fill="#1e40af"/>
                         <polygon points="140,90 110,115 170,115" fill="#1e40af"/>
                         <rect x="90" y="75" width="20" height="35" fill="#ffffff"/>
-                        <!-- Tree -->
                         <circle cx="45" cy="95" r="18" fill="#15803d"/>
                         <rect x="42" y="105" width="6" height="15" fill="#78350f"/>
-                        <!-- Banner -->
                         <path d="M 15 130 L 185 130 L 175 160 L 25 160 Z" fill="#0f172a"/>
                         <text x="100" y="152" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif">TIKUNG KOTA BARU</text>
-                        <!-- Subtext -->
                         <text x="100" y="175" fill="#15803d" font-size="9" font-weight="bold" text-anchor="middle" font-family="sans-serif">BERSAMA • PEDULI • RUKUN • MAJU</text>
                     </svg>
                 </div>
@@ -80,7 +71,6 @@
 
         <!-- TAB 1: REKAP KEUANGAN -->
         <section id="content-rekap" class="tab-content space-y-6">
-            <!-- Saldo Akhir Bulan (Isolated Hero Card) -->
             <div class="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white rounded-2xl p-5 shadow-lg border border-emerald-400 relative overflow-hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative z-10">
                     <div>
@@ -96,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- 4 Financial Metrics Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <p class="text-xs font-medium text-slate-500 uppercase">Saldo Kas Awal</p>
@@ -116,7 +105,6 @@
                 </div>
             </div>
 
-            <!-- Stats Warga Card -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                     <div>
@@ -282,8 +270,7 @@
     </div>
 
     <script>
-        // Data Default Sederhana
-        let defaultData = {
+        const defaultData = {
             pin: "1234",
             warga: [
                 { id: "1", nama: "Budi Santoso", blok: "A-01", lingkungan: "RT 01", lunas: true },
@@ -300,13 +287,11 @@
         let appData = JSON.parse(localStorage.getItem("tkb_app_data")) || defaultData;
         let isAdmin = false;
 
-        // Auto Save ke LocalStorage
         function saveAppData() {
             localStorage.setItem("tkb_app_data", JSON.stringify(appData));
             renderAll();
         }
 
-        // Navigation
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-emerald-600', 'text-white');
@@ -319,206 +304,7 @@
             document.getElementById('content-' + tab).classList.remove('hidden');
         }
 
-        // Auth Modal
         function toggleAuthModal() {
             if (isAdmin) {
                 isAdmin = false;
-                document.getElementById('adminBadge').classList.add('hidden');
-                document.getElementById('authBtnText').innerText = "Masuk Mode Edit";
-                document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-                renderAll();
-            } else {
-                document.getElementById('authModal').classList.remove('hidden');
-            }
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.add('hidden');
-            document.getElementById('pinError').classList.add('hidden');
-            document.getElementById('pinInput').value = "";
-        }
-
-        function verifyPIN() {
-            let inputPin = document.getElementById('pinInput').value;
-            if (inputPin === appData.pin) {
-                isAdmin = true;
-                document.getElementById('adminBadge').classList.remove('hidden');
-                document.getElementById('adminBadge').classList.add('flex');
-                document.getElementById('authBtnText').innerText = "Keluar Mode Edit";
-                document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
-                closeAuthModal();
-                renderAll();
-            } else {
-                document.getElementById('pinError').classList.remove('hidden');
-            }
-        }
-
-        // Format Rupiah
-        function formatRp(val) {
-            return "Rp " + val.toLocaleString("id-ID");
-        }
-
-        // Render Functions
-        function renderAll() {
-            renderRekap();
-            renderIuran();
-            renderTransaksi();
-            renderWarga();
-        }
-
-        function renderRekap() {
-            let totalMasuk = appData.transaksi.filter(t => t.jenis === "Penerimaan").reduce((a, b) => a + Number(b.jumlah), 0);
-            let totalKeluar = appData.transaksi.filter(t => t.jenis === "Pengeluaran").reduce((a, b) => a + Number(b.jumlah), 0);
-            let saldo = totalMasuk - totalKeluar;
-
-            let totalWarga = appData.warga.length;
-            let lunas = appData.warga.filter(w => w.lunas).length;
-            let tunggakan = (totalWarga - lunas) * 50000;
-
-            document.getElementById('totalSaldo').innerText = formatRp(saldo);
-            document.getElementById('saldoAwal').innerText = formatRp(appData.transaksi[0]?.jumlah || 0);
-            document.getElementById('totalPenerimaan').innerText = formatRp(totalMasuk);
-            document.getElementById('totalPengeluaran').innerText = formatRp(totalKeluar);
-            document.getElementById('totalTunggakan').innerText = formatRp(tunggakan);
-            document.getElementById('statLunas').innerText = lunas + " Orang";
-            document.getElementById('statTotalRumah').innerText = totalWarga + " Rumah";
-        }
-
-        function renderIuran() {
-            let tbody = document.getElementById('tableIuran');
-            let query = document.getElementById('searchIuran').value.toLowerCase();
-            tbody.innerHTML = "";
-
-            appData.warga.filter(w => w.nama.toLowerCase().includes(query) || w.blok.toLowerCase().includes(query) || w.lingkungan.toLowerCase().includes(query)).forEach(w => {
-                let tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-slate-50";
-                tr.innerHTML = `
-                    <td class="p-3 font-semibold text-slate-800">${w.nama}</td>
-                    <td class="p-3">${w.blok}</td>
-                    <td class="p-3">${w.lingkungan}</td>
-                    <td class="p-3 text-center">
-                        <span class="px-2 py-1 rounded-full text-[10px] font-bold ${w.lunas ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
-                            ${w.lunas ? 'LUNAS' : 'BELUM BAYAR'}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right admin-only ${isAdmin ? '' : 'hidden'}">
-                        <button onclick="toggleBayar('${w.id}')" class="text-xs ${w.lunas ? 'text-amber-600' : 'text-emerald-600'} font-bold">
-                            ${w.lunas ? 'Tandai Belum' : 'Bayar Sekarang'}
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderTransaksi() {
-            let tbody = document.getElementById('tableTransaksi');
-            tbody.innerHTML = "";
-
-            appData.transaksi.forEach(t => {
-                let tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-slate-50";
-                tr.innerHTML = `
-                    <td class="p-3">${t.tgl}</td>
-                    <td class="p-3 font-medium text-slate-800">${t.ket}</td>
-                    <td class="p-3">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.jenis === 'Penerimaan' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
-                            ${t.jenis}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right font-bold ${t.jenis === 'Penerimaan' ? 'text-emerald-600' : 'text-rose-600'}">${formatRp(Number(t.jumlah))}</td>
-                    <td class="p-3 text-right admin-only ${isAdmin ? '' : 'hidden'}">
-                        <button onclick="hapusTx('${t.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderWarga() {
-            let tbody = document.getElementById('tableWarga');
-            let query = document.getElementById('searchWarga').value.toLowerCase();
-            tbody.innerHTML = "";
-
-            appData.warga.filter(w => w.nama.toLowerCase().includes(query) || w.blok.toLowerCase().includes(query)).forEach(w => {
-                let tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-slate-50";
-                tr.innerHTML = `
-                    <td class="p-3 font-semibold text-slate-800">${w.nama}</td>
-                    <td class="p-3">${w.blok}</td>
-                    <td class="p-3">${w.lingkungan}</td>
-                    <td class="p-3 text-right admin-only ${isAdmin ? '' : 'hidden'}">
-                        <button onclick="hapusWarga('${w.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Operations
-        function toggleBayar(id) {
-            let target = appData.warga.find(w => w.id === id);
-            if (target) {
-                target.lunas = !target.lunas;
-                saveAppData();
-            }
-        }
-
-        function openTxModal() { document.getElementById('txModal').classList.remove('hidden'); }
-        function closeTxModal() { document.getElementById('txModal').classList.add('hidden'); }
-        function saveTx() {
-            let tgl = document.getElementById('txTanggal').value;
-            let jenis = document.getElementById('txJenis').value;
-            let ket = document.getElementById('txKet').value;
-            let jumlah = document.getElementById('txJumlah').value;
-
-            if (tgl && ket && jumlah) {
-                appData.transaksi.push({ id: Date.now().toString(), tgl, jenis, ket, jumlah: Number(jumlah) });
-                saveAppData();
-                closeTxModal();
-            }
-        }
-
-        function hapusTx(id) {
-            appData.transaksi = appData.transaksi.filter(t => t.id !== id);
-            saveAppData();
-        }
-
-        function openWargaModal() { document.getElementById('wargaModal').classList.remove('hidden'); }
-        function closeWargaModal() { document.getElementById('wargaModal').classList.add('hidden'); }
-        function saveWarga() {
-            let nama = document.getElementById('wargaNama').value;
-            let blok = document.getElementById('wargaBlok').value;
-            let lingkungan = document.getElementById('wargaLingkungan').value;
-
-            if (nama && blok) {
-                appData.warga.push({ id: Date.now().toString(), nama, blok, lingkungan, lunas: false });
-                saveAppData();
-                closeWargaModal();
-            }
-        }
-
-        function hapusWarga(id) {
-            appData.warga = appData.warga.filter(w => w.id !== id);
-            saveAppData();
-        }
-
-        function exportCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,No,Nama,Blok,Lingkungan,Status Iuran\n";
-            appData.warga.forEach((w, i) => {
-                csvContent += `${i+1},${w.nama},${w.blok},${w.lingkungan},${w.lunas ? 'Lunas' : 'Belum Bayar'}\n`;
-            });
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Laporan_Iuran_TKB.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Initialize App
-        renderAll();
-    </script>
-</body>
-</html>
+                document.getElementById('adminBadge
