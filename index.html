@@ -229,6 +229,16 @@
                             <option value="2028">2028</option>
                             <option value="2029">2029</option>
                             <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                            <option value="2033">2033</option>
+                            <option value="2034">2034</option>
+                            <option value="2035">2035</option>
+                            <option value="2036">2036</option>
+                            <option value="2037">2037</option>
+                            <option value="2038">2038</option>
+                            <option value="2039">2039</option>
+                            <option value="2040">2040</option>
                         </select>
                     </div>
                 </div>
@@ -694,6 +704,18 @@
                                 <option value="2026" selected>2026</option>
                                 <option value="2027">2027</option>
                                 <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                                <option value="2033">2033</option>
+                                <option value="2034">2034</option>
+                                <option value="2035">2035</option>
+                                <option value="2036">2036</option>
+                                <option value="2037">2037</option>
+                                <option value="2038">2038</option>
+                                <option value="2039">2039</option>
+                                <option value="2040">2040</option>
                             </select>
                         </div>
 
@@ -718,6 +740,18 @@
                                 <option value="2026" selected>2026</option>
                                 <option value="2027">2027</option>
                                 <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                                <option value="2033">2033</option>
+                                <option value="2034">2034</option>
+                                <option value="2035">2035</option>
+                                <option value="2036">2036</option>
+                                <option value="2037">2037</option>
+                                <option value="2038">2038</option>
+                                <option value="2039">2039</option>
+                                <option value="2040">2040</option>
                             </select>
                         </div>
                     </div>
@@ -2106,7 +2140,7 @@
                     currentUser = auth.currentUser;
 
                     if (currentUser) {
-                        const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'tkb_financial_data');
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tkb_financial_shared_data');
                         onSnapshot(docRef, (docSnap) => {
                             if (docSnap.exists()) {
                                 const cloudData = docSnap.data();
@@ -2118,6 +2152,8 @@
                                 window.updateUiFromSettings();
                                 window.updateDashboard();
                             }
+                        }, (error) => {
+                            console.warn("Cloud Snapshot Error:", error);
                         });
                     }
                 }
@@ -2129,7 +2165,7 @@
         window.saveDataToCloud = function() {
             window.saveDataToStorage();
             if (db && currentUser) {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'tkb_financial_data');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tkb_financial_shared_data');
                 setDoc(docRef, { settings, masterWarga, databasePeriode }, { merge: true }).catch(err => {
                     console.warn("Save Cloud Error:", err);
                 });
@@ -2731,7 +2767,6 @@
                     if (t.metode === 'Kas Tunai') keluarTunai += t.nominal;
                     else keluarBank += t.nominal;
                 } else if (t.jenis === 'Transfer Internal') {
-                    // Internal transfer: e.g. Cash -> Bank
                     if (t.kategori === 'Setor Cash ke Bank') {
                         keluarTunai += t.nominal;
                         masukBank += t.nominal;
@@ -3052,6 +3087,8 @@
             if (!p.iuranWarga[w.id]) p.iuranWarga[w.id] = {};
             p.iuranWarga[w.id].statusBayar = "Sudah Bayar";
             p.iuranWarga[w.id].tglBayar = tglFormatted;
+            // 1. Simpan nominalDibayar saat warga bayar iuran agar historis aman dari perubahan tarif masa depan
+            p.iuranWarga[w.id].nominalDibayar = w.totalTarifPersonal;
 
             const newTransId = p.transaksi.length > 0 ? Math.max(...p.transaksi.map(t => t.id)) + 1 : 1;
             p.transaksi.push({
@@ -3096,6 +3133,8 @@
             if (p.iuranWarga[w.id]) {
                 p.iuranWarga[w.id].statusBayar = "Belum Bayar";
                 p.iuranWarga[w.id].tglBayar = "-";
+                // 4. Saat unbayar, hapus juga nominalDibayar
+                delete p.iuranWarga[w.id].nominalDibayar;
             }
 
             p.transaksi = p.transaksi.filter(t => !t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
@@ -3137,6 +3176,7 @@
 
             if (p.iuranWarga[w.id]) {
                 p.iuranWarga[w.id].tglBayar = formatted;
+                // 3. Saat edit tanggal bayar, nominalDibayar tetap dipertahankan (tidak diubah/diset ulang)
             }
 
             const tMatch = p.transaksi.find(t => t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
@@ -3264,7 +3304,7 @@
             reader.onload = function(evt) {
                 try {
                     const parsed = JSON.parse(evt.target.result);
-                    if (parsed.settings) settings = parsed.parsed?.settings || parsed.settings;
+                    if (parsed.settings) settings = parsed.settings;
                     if (parsed.masterWarga) masterWarga = parsed.masterWarga;
                     if (parsed.databasePeriode) databasePeriode = parsed.databasePeriode;
 
@@ -3352,6 +3392,9 @@
             let totalCashIuran = 0;
             let totalOnlineIuran = 0;
 
+            const keyAktif = window.getSelectedKey();
+            const pAktif = databasePeriode[keyAktif] || { iuranWarga: {} };
+
             dataWarga.forEach(w => {
                 let target = null;
                 if (w.lingkungan === 'Lingkungan 1' || w.lingkungan === settings.lingkungan1.nama) target = rekapL1;
@@ -3364,7 +3407,12 @@
                     target.total++;
                     if (w.statusBayar === 'Sudah Bayar') {
                         target.sudah++;
-                        target.uangMasuk += w.totalTarifPersonal;
+                        
+                        // 2. Gunakan nominalDibayar (jika ada), fallback ke tarif saat ini jika tidak ada (untuk data lama)
+                        const iuranRecord = pAktif.iuranWarga[w.id] || {};
+                        const nominalRiil = (iuranRecord.nominalDibayar !== undefined) ? iuranRecord.nominalDibayar : w.totalTarifPersonal;
+
+                        target.uangMasuk += nominalRiil;
 
                         if (pos.kebersihan) danaKebersihan += settings.tarifKebersihan;
                         if (pos.keamanan) danaKeamanan += settings.tarifKeamanan;
@@ -3375,12 +3423,12 @@
                         const matchedTrans = dataTransaksi.find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
                         if (matchedTrans) {
                             if (matchedTrans.metode === 'Transfer Bank') {
-                                totalOnlineIuran += w.totalTarifPersonal;
+                                totalOnlineIuran += nominalRiil;
                             } else {
-                                totalCashIuran += w.totalTarifPersonal;
+                                totalCashIuran += nominalRiil;
                             }
                         } else {
-                            totalOnlineIuran += w.totalTarifPersonal;
+                            totalOnlineIuran += nominalRiil;
                         }
 
                     } else {
@@ -3451,6 +3499,12 @@
                         kategoriExp[t.kategori] += t.nominal;
                     } else {
                         kategoriExp['Lain-lain'] += t.nominal;
+                    }
+                } else if (t.jenis === 'Transfer Internal') {
+                    if (t.kategori === 'Setor Cash ke Bank') {
+                        // Internal move, total cash & bank balance unaffected overall
+                    } else if (t.kategori === 'Tarik Bank ke Cash') {
+                        // Internal move
                     }
                 }
             });
