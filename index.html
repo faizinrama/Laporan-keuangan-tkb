@@ -407,6 +407,33 @@
                     </div>
                 </div>
 
+                <!-- SISA SALDO BERDASARKAN BENTUK (CASH VS ONLINE) - COMPACT -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-100 block flex items-center gap-1">
+                                <i class="fa-solid fa-wallet text-amber-300"></i> Saldo Kas Tunai (Cash)
+                            </span>
+                            <span class="text-base font-black text-white block mt-0.5" id="kpiSisaTunai">Rp 0</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-lg bg-white/25 flex items-center justify-center text-sm shadow-inner shrink-0 backdrop-blur-sm">
+                            <i class="fa-solid fa-money-bill-wave text-amber-300"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-teal-700 to-cyan-800 text-white p-3 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[9px] font-extrabold uppercase tracking-wider text-teal-100 block flex items-center gap-1">
+                                <i class="fa-solid fa-building-columns text-amber-300"></i> Saldo Rekening Bank (Online)
+                            </span>
+                            <span class="text-base font-black text-white block mt-0.5" id="kpiSisaBank">Rp 0</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-lg bg-white/25 flex items-center justify-center text-sm shadow-inner shrink-0 backdrop-blur-sm">
+                            <i class="fa-solid fa-qrcode text-amber-300"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- SECONDARY FINANCIAL METRICS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
                     <div class="tkb-card p-4 bg-gradient-to-br from-teal-50 to-emerald-100/60 border-2 border-teal-200/80 rounded-xl shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between group">
@@ -1016,6 +1043,35 @@
                     </div>
                 </div>
 
+                <!-- SISA SALDO BERDASARKAN BENTUK (CASH VS ONLINE) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100 block flex items-center gap-1">
+                                <i class="fa-solid fa-wallet text-amber-300"></i> Sisa Saldo Kas Tunai (Cash)
+                            </span>
+                            <span class="text-xl font-black text-white block mt-0.5" id="transSisaTunai">Rp 0</span>
+                            <span class="text-[9px] text-emerald-100 opacity-90">Saldo Awal Tunai + Masuk Tunai - Keluar Tunai</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-white/25 flex items-center justify-center text-lg shadow-inner shrink-0 backdrop-blur-sm">
+                            <i class="fa-solid fa-money-bill-wave text-amber-300"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-teal-700 to-cyan-800 text-white p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-100 block flex items-center gap-1">
+                                <i class="fa-solid fa-building-columns text-amber-300"></i> Sisa Saldo Rekening Bank (Online)
+                            </span>
+                            <span class="text-xl font-black text-white block mt-0.5" id="transSisaBank">Rp 0</span>
+                            <span class="text-[9px] text-teal-100 opacity-90">Saldo Awal Bank + Masuk Bank - Keluar Bank</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-white/25 flex items-center justify-center text-lg shadow-inner shrink-0 backdrop-blur-sm">
+                            <i class="fa-solid fa-qrcode text-amber-300"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs text-left border-collapse">
                         <thead>
@@ -1033,7 +1089,7 @@
                                     Keterangan / Rincian <span id="sortIcon_keterangan" class="text-[10px] ml-1"><i class="fa-solid fa-sort"></i></span>
                                 </th>
                                 <th class="p-3 cursor-pointer hover:bg-slate-700 transition select-none" onclick="window.sortTransaksi('metode')">
-                                    Metode Bayar <span id="sortIcon_metode" class="text-[10px] ml-1"><i class="fa-solid fa-sort"></i></span>
+                                    Metode / Jalur <span id="sortIcon_metode" class="text-[10px] ml-1"><i class="fa-solid fa-sort"></i></span>
                                 </th>
                                 <th class="p-3 text-right cursor-pointer hover:bg-slate-700 transition select-none" onclick="window.sortTransaksi('nominal')">
                                     Jumlah Nominal <span id="sortIcon_nominal" class="text-[10px] ml-1"><i class="fa-solid fa-sort"></i></span>
@@ -1134,6 +1190,35 @@
                     <div class="text-right">
                         <span class="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">Terkumpul</span>
                         <span class="text-sm font-black text-cyan-800" id="rekapIuranL3Nominal">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown Metode Pembayaran (Cash vs Transfer Online) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="tkb-card p-4 bg-gradient-to-br from-emerald-50 to-teal-50/50 border-2 border-emerald-200 flex items-center justify-between shadow-sm">
+                    <div>
+                        <div class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider flex items-center gap-1 mb-1">
+                            <i class="fa-solid fa-money-bill-wave text-emerald-600"></i> Total Pembayaran Tunai (Cash)
+                        </div>
+                        <div class="text-xl font-black text-emerald-950" id="rekapTotalCash">Rp 0</div>
+                        <div class="text-[10px] text-emerald-700 font-medium mt-0.5">Diterima langsung oleh kasir / pengurus</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md shrink-0">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                <div class="tkb-card p-4 bg-gradient-to-br from-teal-50 to-cyan-50/50 border-2 border-teal-200 flex items-center justify-between shadow-sm">
+                    <div>
+                        <div class="text-[10px] font-extrabold text-teal-800 uppercase tracking-wider flex items-center gap-1 mb-1">
+                            <i class="fa-solid fa-building-columns text-teal-600"></i> Total Pembayaran Transfer (Online)
+                        </div>
+                        <div class="text-xl font-black text-teal-950" id="rekapTotalOnline">Rp 0</div>
+                        <div class="text-[10px] text-teal-700 font-medium mt-0.5">Masuk melalui mutasi rekening bank</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-teal-600 text-white flex items-center justify-center text-xl shadow-md shrink-0">
+                        <i class="fa-solid fa-qrcode"></i>
                     </div>
                 </div>
             </div>
@@ -1578,24 +1663,25 @@
                         <select id="transJenis" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none" onchange="window.updateKategoriOptions()">
                             <option value="Penerimaan">Penerimaan (Kas Masuk)</option>
                             <option value="Pengeluaran">Pengeluaran (Kas Keluar)</option>
+                            <option value="Transfer Internal">Transfer Kas &lt;&gt; Bank</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Kategori</label>
+                        <label class="block font-semibold text-slate-700 mb-1">Kategori / Jalur</label>
                         <select id="transKategori" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none"></select>
                     </div>
                 </div>
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Keterangan / Rincian</label>
-                    <input type="text" id="transKeterangan" required placeholder="Contoh: Gaji Satpam Oktober" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none">
+                    <input type="text" id="transKeterangan" required placeholder="Contoh: Setor uang cash ke rekening bank" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Nominal (Rp)</label>
                         <input type="number" id="transNominal" required placeholder="0" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none">
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Metode</label>
+                    <div id="boxMetodeContainer">
+                        <label class="block font-semibold text-slate-700 mb-1">Metode / Jalur</label>
                         <select id="transMetode" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none">
                             <option value="Kas Tunai">Kas Tunai</option>
                             <option value="Transfer Bank">Transfer Bank</option>
@@ -2641,16 +2727,36 @@
                 if (t.jenis === 'Penerimaan') {
                     if (t.metode === 'Kas Tunai') masukTunai += t.nominal;
                     else masukBank += t.nominal;
-                } else {
+                } else if (t.jenis === 'Pengeluaran') {
                     if (t.metode === 'Kas Tunai') keluarTunai += t.nominal;
                     else keluarBank += t.nominal;
+                } else if (t.jenis === 'Transfer Internal') {
+                    // Internal transfer: e.g. Cash -> Bank
+                    if (t.kategori === 'Setor Cash ke Bank') {
+                        keluarTunai += t.nominal;
+                        masukBank += t.nominal;
+                    } else if (t.kategori === 'Tarik Bank ke Cash') {
+                        keluarBank += t.nominal;
+                        masukTunai += t.nominal;
+                    }
                 }
 
-                const isPenerimaan = t.jenis === 'Penerimaan';
-                const rowBgClass = isPenerimaan ? 'bg-emerald-50/60 hover:bg-emerald-100/70 border-l-4 border-l-emerald-500' : 'bg-orange-50/60 hover:bg-orange-100/70 border-l-4 border-l-orange-500';
-                const iconJenis = isPenerimaan ? '<i class="fa-solid fa-circle-arrow-down text-emerald-600 mr-1"></i>' : '<i class="fa-solid fa-circle-arrow-up text-orange-600 mr-1"></i>';
-                const badgeJenisClass = isPenerimaan ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-orange-100 text-orange-800 border border-orange-300';
-                const nominalColorClass = isPenerimaan ? 'text-emerald-700 font-black' : 'text-orange-700 font-black';
+                let rowBgClass = 'bg-slate-50/60 hover:bg-slate-100/70 border-l-4 border-l-slate-400';
+                let iconJenis = '<i class="fa-solid fa-right-left text-purple-600 mr-1"></i>';
+                let badgeJenisClass = 'bg-purple-100 text-purple-800 border border-purple-300';
+                let nominalColorClass = 'text-purple-700 font-black';
+
+                if (t.jenis === 'Penerimaan') {
+                    rowBgClass = 'bg-emerald-50/60 hover:bg-emerald-100/70 border-l-4 border-l-emerald-500';
+                    iconJenis = '<i class="fa-solid fa-circle-arrow-down text-emerald-600 mr-1"></i>';
+                    badgeJenisClass = 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+                    nominalColorClass = 'text-emerald-700 font-black';
+                } else if (t.jenis === 'Pengeluaran') {
+                    rowBgClass = 'bg-orange-50/60 hover:bg-orange-100/70 border-l-4 border-l-orange-500';
+                    iconJenis = '<i class="fa-solid fa-circle-arrow-up text-orange-600 mr-1"></i>';
+                    badgeJenisClass = 'bg-orange-100 text-orange-800 border border-orange-300';
+                    nominalColorClass = 'text-orange-700 font-black';
+                }
 
                 html += `
                     <tr class="${rowBgClass} transition">
@@ -2658,8 +2764,8 @@
                         <td class="p-3 font-bold"><span class="px-2 py-0.5 rounded-md text-[10px] ${badgeJenisClass} inline-flex items-center">${iconJenis}${t.jenis}</span></td>
                         <td class="p-3 text-slate-700 font-semibold">${t.kategori}</td>
                         <td class="p-3 text-slate-800">${t.keterangan}</td>
-                        <td class="p-3 text-slate-600"><span class="bg-white/80 border border-slate-200 px-2 py-0.5 rounded text-[10px] font-medium">${t.metode}</span></td>
-                        <td class="p-3 text-right ${nominalColorClass}">${isPenerimaan ? '+' : '-'}${formatRupiah(t.nominal)}</td>
+                        <td class="p-3 text-slate-600"><span class="bg-white/80 border border-slate-200 px-2 py-0.5 rounded text-[10px] font-medium">${t.metode || '-'}</span></td>
+                        <td class="p-3 text-right ${nominalColorClass}">${t.jenis === 'Pengeluaran' ? '-' : (t.jenis === 'Penerimaan' ? '+' : '')}${formatRupiah(t.nominal)}</td>
                         <td class="p-3 text-center no-print admin-only space-x-1">
                             <button onclick="window.editTransaksi(${t.id})" class="text-blue-600 hover:text-blue-800 p-1" title="Edit Transaksi"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button onclick="window.openModalDeleteTransaksi(${t.id})" class="text-red-500 hover:text-red-700 p-1" title="Hapus Transaksi"><i class="fa-solid fa-trash"></i></button>
@@ -2674,6 +2780,17 @@
             document.getElementById('transInfoMasukBank').innerText = formatRupiah(masukBank);
             document.getElementById('transInfoKeluarTunai').innerText = formatRupiah(keluarTunai);
             document.getElementById('transInfoKeluarBank').innerText = formatRupiah(keluarBank);
+
+            const sisaTunai = activeKasTunaiAwal + masukTunai - keluarTunai;
+            const sisaBank = activeKasBankAwal + masukBank - keluarBank;
+
+            document.getElementById('transSisaTunai').innerText = formatRupiah(sisaTunai);
+            document.getElementById('transSisaBank').innerText = formatRupiah(sisaBank);
+
+            const kpiTunaiEl = document.getElementById('kpiSisaTunai');
+            const kpiBankEl = document.getElementById('kpiSisaBank');
+            if (kpiTunaiEl) kpiTunaiEl.innerText = formatRupiah(sisaTunai);
+            if (kpiBankEl) kpiBankEl.innerText = formatRupiah(sisaBank);
         };
 
         window.sortTransaksi = function(col) {
@@ -3057,7 +3174,7 @@
             document.getElementById('transKategori').value = t.kategori;
             document.getElementById('transKeterangan').value = t.keterangan;
             document.getElementById('transNominal').value = t.nominal;
-            document.getElementById('transMetode').value = t.metode;
+            document.getElementById('transMetode').value = t.metode || 'Kas Tunai';
 
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
@@ -3069,20 +3186,29 @@
         window.updateKategoriOptions = function() {
             const jenis = document.getElementById('transJenis').value;
             const selKategori = document.getElementById('transKategori');
+            const boxMetode = document.getElementById('boxMetodeContainer');
 
             if (jenis === 'Penerimaan') {
+                if (boxMetode) boxMetode.style.display = 'block';
                 selKategori.innerHTML = `
                     <option value="Iuran Warga">Iuran Warga</option>
                     <option value="Sumbangan / Donasi">Sumbangan / Donasi</option>
                     <option value="Lain-lain">Lain-lain</option>
                 `;
-            } else {
+            } else if (jenis === 'Pengeluaran') {
+                if (boxMetode) boxMetode.style.display = 'block';
                 selKategori.innerHTML = `
                     <option value="Kebersihan">Kebersihan</option>
                     <option value="Keamanan">Keamanan</option>
                     <option value="Sosial">Sosial</option>
                     <option value="Lingkungan">Lingkungan</option>
                     <option value="Lain-lain">Lain-lain</option>
+                `;
+            } else if (jenis === 'Transfer Internal') {
+                if (boxMetode) boxMetode.style.display = 'none';
+                selKategori.innerHTML = `
+                    <option value="Setor Cash ke Bank">Pindahkan Uang Tunai ke Rekening Bank</option>
+                    <option value="Tarik Bank ke Cash">Tarik Saldo Bank menjadi Uang Tunai</option>
                 `;
             }
         };
@@ -3098,7 +3224,11 @@
             const kategori = document.getElementById('transKategori').value;
             const keterangan = document.getElementById('transKeterangan').value;
             const nominal = parseFloat(document.getElementById('transNominal').value) || 0;
-            const metode = document.getElementById('transMetode').value;
+            
+            let metode = document.getElementById('transMetode').value;
+            if (jenis === 'Transfer Internal') {
+                metode = kategori === 'Setor Cash ke Bank' ? 'Tunai ke Bank' : 'Bank ke Tunai';
+            }
 
             if (id) {
                 const idx = p.transaksi.findIndex(t => t.id == id);
@@ -3219,6 +3349,9 @@
             let danaLingkungan = 0;
             let danaPaguyuban = 0;
 
+            let totalCashIuran = 0;
+            let totalOnlineIuran = 0;
+
             dataWarga.forEach(w => {
                 let target = null;
                 if (w.lingkungan === 'Lingkungan 1' || w.lingkungan === settings.lingkungan1.nama) target = rekapL1;
@@ -3238,6 +3371,17 @@
                         if (pos.sosial) danaSosial += settings.tarifSosial;
                         if (pos.lingkungan) danaLingkungan += settings.tarifLingkungan;
                         if (pos.paguyuban) danaPaguyuban += settings.tarifPaguyuban;
+
+                        const matchedTrans = dataTransaksi.find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+                        if (matchedTrans) {
+                            if (matchedTrans.metode === 'Transfer Bank') {
+                                totalOnlineIuran += w.totalTarifPersonal;
+                            } else {
+                                totalCashIuran += w.totalTarifPersonal;
+                            }
+                        } else {
+                            totalOnlineIuran += w.totalTarifPersonal;
+                        }
 
                     } else {
                         target.belum++;
@@ -3276,13 +3420,15 @@
             document.getElementById('posDanaPaguyuban').innerText = formatRupiah(danaPaguyuban);
             document.getElementById('posTotalPenerimaanIuran').innerText = formatRupiah(totalPenerimaanIuranPos);
 
-            // Populate Rekap Iuran Tab Pos Summary
             if (document.getElementById('rekapPosKebersihan')) {
                 document.getElementById('rekapPosKebersihan').innerText = formatRupiah(danaKebersihan);
                 document.getElementById('rekapPosKeamanan').innerText = formatRupiah(danaKeamanan);
                 document.getElementById('rekapPosSosial').innerText = formatRupiah(danaSosial);
                 document.getElementById('rekapPosLingkungan').innerText = formatRupiah(danaLingkungan);
                 document.getElementById('rekapPosPaguyuban').innerText = formatRupiah(danaPaguyuban);
+
+                document.getElementById('rekapTotalCash').innerText = formatRupiah(totalCashIuran);
+                document.getElementById('rekapTotalOnline').innerText = formatRupiah(totalOnlineIuran);
             }
 
             let totalPenerimaan = 0;
@@ -3309,14 +3455,12 @@
                 }
             });
 
-            // Calculate Remaining Balance per Category (Sisa Saldo Tiap Pos Iuran)
             const sisaKebersihan = danaKebersihan - kategoriExp['Kebersihan'];
             const sisaKeamanan = danaKeamanan - kategoriExp['Keamanan'];
             const sisaSosial = danaSosial - kategoriExp['Sosial'];
             const sisaLingkungan = danaLingkungan - kategoriExp['Lingkungan'];
             const sisaPaguyuban = danaPaguyuban - (kategoriExp['Lain-lain'] || 0);
 
-            // Helper to build Card HTML with conditional Warning state if negative
             function buildSisaCardHTML(title, iconClass, val, normalBg, normalBorder, normalText, normalSub) {
                 const isMinus = val < 0;
                 const bgClass = isMinus ? 'bg-red-50 border-2 border-red-300 shadow-sm' : `${normalBg} border ${normalBorder}`;
