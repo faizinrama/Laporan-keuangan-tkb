@@ -2152,7 +2152,7 @@
                 currentUser = auth.currentUser;
 
                 if (currentUser) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tkb_financial_shared_data');
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                     onSnapshot(docRef, (docSnap) => {
                         if (docSnap.exists()) {
                             const cloudData = docSnap.data();
@@ -2176,7 +2176,7 @@
         window.saveDataToCloud = function() {
             window.saveDataToStorage();
             if (db && currentUser) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tkb_financial_shared_data');
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data');
                 setDoc(docRef, { settings, masterWarga, databasePeriode }, { merge: true }).catch(err => {
                     console.warn("Save Cloud Error:", err);
                 });
