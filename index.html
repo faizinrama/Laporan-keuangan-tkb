@@ -3685,6 +3685,32 @@
         window.onload = function() {
             window.loadDataFromStorage();
             window.updateUiFromSettings();
+
+            // --- FITUR OTOMATIS DETEKSI BULAN & TAHUN ---
+            const now = new Date();
+            const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            const bulanSekarang = daftarBulan[now.getMonth()];
+            const tahunSekarang = now.getFullYear().toString();
+
+            const selectBulan = document.getElementById('filterBulan');
+            const selectTahun = document.getElementById('filterTahun');
+
+            // Set nilai dropdown ke bulan & tahun saat ini
+            if (selectBulan) selectBulan.value = bulanSekarang;
+            
+            // Pastikan tahun saat ini ada di dalam pilihan dropdown
+            if (selectTahun) {
+                let optionTahun = Array.from(selectTahun.options).find(opt => opt.value === tahunSekarang);
+                if (!optionTahun) {
+                    // Jika tahun belum ada di list, tambahkan otomatis
+                    let newOption = new Option(tahunSekarang, tahunSekarang);
+                    selectTahun.add(newOption);
+                }
+                selectTahun.value = tahunSekarang;
+            }
+            // --- AKHIR FITUR OTOMATIS DETEKSI ---
+
+            // Tampilkan data sesuai bulan & tahun yang baru terdeteksi
             window.updateDashboard();
             initFirebaseSync();
         };
