@@ -2064,7 +2064,8 @@
             let currIdx = idxBulan - 1;
             let currTahun = numTahun;
 
-            for (let i = 0; i < 24; i++) {
+            // Looping mundur hingga 5 tahun (60 bulan) ke belakang
+            for (let i = 0; i < 60; i++) {
                 if (currIdx < 0) {
                     currIdx = 11;
                     currTahun -= 1;
@@ -2074,16 +2075,37 @@
 
                 if (databasePeriode[keyLalu]) {
                     const p = databasePeriode[keyLalu];
+                    
+                    // Jika ada kalibrasi manual, kita pakai saldo akhirnya
+                    if (p.isManualCalibrated) {
+                        return window.hitungSaldoAkhirPeriode(keyLalu);
+                    }
+
                     const hasTransaksi = p.transaksi && p.transaksi.length > 0;
                     const hasIuranLunas = p.iuranWarga && Object.values(p.iuranWarga).some(iw => iw.statusBayar === 'Sudah Bayar');
 
-                    if (hasTransaksi || hasIuranLunas || p.kasTunai !== undefined) {
-                        return window.hitungSaldoAkhirPeriode(keyLalu);
+                    // Jika bulan tersebut ada aktivitas (transaksi/ada yang bayar)
+                    if (hasTransaksi || hasIuranLunas) {
+                        // Hitung saldo awal bulan tersebut secara rekursif (mundur lagi)
+                        const saldoAwalLalu = window.getSaldoAwalDinamis(DAFTAR_BULAN[currIdx], currTahun.toString());
+                        
+                        let masuk = 0;
+                        let keluar = 0;
+                        if (p.transaksi) {
+                            p.transaksi.forEach(t => {
+                                if (t.jenis === 'Penerimaan') masuk += t.nominal;
+                                if (t.jenis === 'Pengeluaran') keluar += t.nominal;
+                            });
+                        }
+                        
+                        // Kembalikan saldo akhir bulan tersebut
+                        return saldoAwalLalu + masuk - keluar;
                     }
                 }
-                currIdx--;
+                currIdx--; // Lanjut cek bulan sebelumnya
             }
 
+            // Jika tidak ada data sama sekali di masa lalu, pakai saldo awal default
             return settings.kasTunaiAwal + settings.kasBankAwal;
         };
 
