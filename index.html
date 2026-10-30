@@ -2360,6 +2360,7 @@
             const formattedTarif = formatRupiah(settings.tarifIuran);
             document.getElementById('labelTarifPilihan').innerText = formattedTarif;
             document.getElementById('labelTarifIuranBadge').innerText = `${formattedTarif} / Rumah / Bulan`;
+            window.updateDropdownLingkungan();
         };
 
         window.renderCharts = function(totalPengeluaran, kategoriExp) {
@@ -2967,11 +2968,29 @@
         window.filterTabelIuran = function() {
             window.renderIuranMatrix();
         };
+        
+        window.updateDropdownLingkungan = function() {
+            const selectLingkungan = document.getElementById('wargaLingkungan');
+            if (!selectLingkungan) return;
 
+            const valTerpilih = selectLingkungan.value; 
+
+            selectLingkungan.innerHTML = `
+                <option value="${settings.lingkungan1.nama}">${settings.lingkungan1.nama} (${settings.lingkungan1.blok})</option>
+                <option value="${settings.lingkungan2.nama}">${settings.lingkungan2.nama} (${settings.lingkungan2.blok})</option>
+                <option value="${settings.lingkungan3.nama}">${settings.lingkungan3.nama} (${settings.lingkungan3.blok})</option>
+            `;
+
+            if (valTerpilih) {
+                selectLingkungan.value = valTerpilih;
+            }
+        };
+        
         window.openModalWarga = function() {
             document.getElementById('formWarga').reset();
             document.getElementById('wargaId').value = '';
             document.getElementById('modalWargaTitle').innerText = 'Tambah Data Warga Baru';
+            window.updateDropdownLingkungan();
             document.getElementById('modalWarga').classList.remove('hidden');
         };
 
@@ -2996,6 +3015,7 @@
             document.getElementById('chkLingkungan').checked = !!pos.lingkungan;
             document.getElementById('chkPaguyuban').checked = !!pos.paguyuban;
 
+            window.updateDropdownLingkungan();
             document.getElementById('modalWargaTitle').innerText = 'Edit Data Warga';
             document.getElementById('modalWarga').classList.remove('hidden');
         };
