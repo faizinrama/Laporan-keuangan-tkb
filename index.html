@@ -104,15 +104,57 @@
         }
 
         @media print {
-            .no-print {
+            /* 1. Sembunyikan elemen yang tidak perlu dicetak */
+            header, 
+            .no-print, 
+            button, 
+            .admin-only,
+            select,
+            input {
                 display: none !important;
             }
+
+            /* 2. Bersihkan background dan margin agar tidak boros kertas */
             body {
-                background: white;
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11pt;
             }
+            main {
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            /* 3. Pastikan kotak laporan tetap rapi, bergaris, dan tidak terpotong */
             .tkb-card {
-                box-shadow: none;
-                border: 1px solid #ccc;
+                box-shadow: none !important;
+                border: 1px solid #999 !important;
+                page-break-inside: avoid;
+                margin-bottom: 15px !important;
+            }
+
+            /* 4. Hindari baris tabel terpotong di tengah halaman */
+            table {
+                page-break-inside: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            /* 5. Paksa semua judul & teks terang jadi hitam agar hemat tinta */
+            h1, h2, h3, h4, th {
+                color: #000000 !important;
+            }
+            .text-white, .text-slate-800, .text-slate-900 {
+                color: #000000 !important;
+            }
+
+            /* 6. Sembunyikan section pengaturan (admin) saat dicetak */
+            #section-pengaturan {
+                display: none !important;
             }
         }
     </style>
@@ -249,27 +291,27 @@
     <!-- Navigation Tabs -->
     <div class="max-w-7xl mx-auto px-4 mt-4 no-print">
         <div class="flex flex-wrap gap-1 border-b border-emerald-200">
-            <button onclick="window.switchTab('rekap')" id="tab-rekap" class="excel-tab active px-5 py-2.5 text-sm flex items-center gap-2">
+            <button onclick="window.switchTab('rekap')" id="tab-rekap" class="excel-tab active px-5 py-2.5 text-sm flex items-center gap-2 transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <i class="fa-solid fa-chart-pie"></i> Rekap Keuangan
             </button>
-            <button onclick="window.switchTab('warga')" id="tab-warga" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2">
+            <button onclick="window.switchTab('warga')" id="tab-warga" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2 transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <i class="fa-solid fa-users"></i> Data Warga
             </button>
-            <button onclick="window.switchTab('transaksi')" id="tab-transaksi" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2">
+            <button onclick="window.switchTab('transaksi')" id="tab-transaksi" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2 transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <i class="fa-solid fa-money-bill-transfer"></i> Transaksi Kas
             </button>
-            <button onclick="window.switchTab('tagihan')" id="tab-tagihan" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2">
+            <button onclick="window.switchTab('tagihan')" id="tab-tagihan" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2 transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <i class="fa-solid fa-file-invoice-dollar"></i> Rekap Iuran
             </button>
-            <button onclick="window.switchTab('pengaturan')" id="tab-pengaturan" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2 admin-only">
+            <button onclick="window.switchTab('pengaturan')" id="tab-pengaturan" class="excel-tab px-5 py-2.5 text-sm flex items-center gap-2 admin-only transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <i class="fa-solid fa-gear"></i> Pengaturan
             </button>
             
             <div class="ml-auto flex items-center gap-2 py-1">
-                <button onclick="window.exportDataCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-file-csv"></i> Ekspor CSV
+                <button onclick="window.exportDataToSpreadsheet()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-file-excel"></i> Ekspor Spreadsheet
                 </button>
-                <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                <button onclick="window.handlePrintReport()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                     <i class="fa-solid fa-print"></i> Cetak / PDF
                 </button>
             </div>
@@ -285,10 +327,10 @@
             <!-- Sub-Menu Controller -->
             <div class="flex items-center justify-between border-b pb-3 no-print flex-wrap gap-2">
                 <div class="flex gap-2">
-                    <button onclick="window.switchRekapSubTab('bulanan')" id="subTabBulanan" class="sub-tab-btn active px-4 py-2 rounded-lg text-xs flex items-center gap-2 transition shadow-sm">
+                    <button onclick="window.switchRekapSubTab('bulanan')" id="subTabBulanan" class="sub-tab-btn active px-4 py-2 rounded-lg text-xs flex items-center gap-2 transition shadow-sm transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <i class="fa-solid fa-calendar-day"></i> Ringkasan Bulan Ini
                     </button>
-                    <button onclick="window.switchRekapSubTab('tren')" id="subTabTren" class="sub-tab-btn px-4 py-2 rounded-lg text-xs flex items-center gap-2 transition shadow-sm">
+                    <button onclick="window.switchRekapSubTab('tren')" id="subTabTren" class="sub-tab-btn px-4 py-2 rounded-lg text-xs flex items-center gap-2 transition shadow-sm transform transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                         <i class="fa-solid fa-chart-line"></i> Analisis Tren & Tahunan
                     </button>
                 </div>
@@ -297,43 +339,43 @@
                 </span>
             </div>
 
-            <!-- SUB-VIEW 1.1: RINGKASAN BULANAN -->
+            <!-- SUB-VIEW 1.1: RINGKASAN BULAN INIS -->
             <div id="subViewBulanan" class="space-y-6">
                 <!-- Summary Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-l-4 border-emerald-600 shadow-sm hover:shadow-md transition">
+                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-500 shadow-md hover:shadow-lg transition">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
                             <i class="fa-solid fa-user-check"></i>
                         </div>
                         <div class="w-full">
                             <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-extrabold text-emerald-800 uppercase tracking-wider">WARGA SUDAH MEMBAYAR</span>
-                                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Partisipasi</span>
+                                <span class="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider">WARGA SUDAH MEMBAYAR</span>
+                                <span class="text-[10px] bg-emerald-200 text-emerald-900 font-extrabold px-2 py-0.5 rounded-full">Partisipasi</span>
                             </div>
-                            <div class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mt-1 flex items-baseline gap-1.5 flex-wrap" id="statSudahBayar">0 / 0 <span class="text-xs sm:text-sm font-bold text-emerald-600">(0%)</span></div>
-                            <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
-                                <i class="fa-solid fa-circle-info text-emerald-500"></i> Warga membayar / total terdata
+                            <div class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mt-1 flex items-baseline gap-1.5 flex-wrap" id="statSudahBayar">0 / 0 <span class="text-xs sm:text-sm font-bold text-emerald-700">(0%)</span></div>
+                            <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
+                                <i class="fa-solid fa-circle-info text-emerald-600"></i> Warga membayar / total terdata
                             </div>
                         </div>
                     </div>
 
-                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-white border-l-4 border-teal-600 shadow-sm hover:shadow-md transition">
+                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-white border-2 border-teal-500 shadow-md hover:shadow-lg transition">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
                             <i class="fa-solid fa-house-chimney"></i>
                         </div>
                         <div class="w-full">
                             <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-extrabold text-teal-800 uppercase tracking-wider">RUMAH TERDATA</span>
-                                <span class="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full">Master Data</span>
+                                <span class="text-[11px] font-extrabold text-teal-900 uppercase tracking-wider">RUMAH TERDATA</span>
+                                <span class="text-[10px] bg-teal-200 text-teal-900 font-extrabold px-2 py-0.5 rounded-full">Master Data</span>
                             </div>
                             <div class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mt-1" id="statTotalRumah">0</div>
-                            <div class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
-                                <i class="fa-solid fa-map-pin text-teal-500"></i> Jumlah unit rumah aktif di TKB
+                            <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
+                                <i class="fa-solid fa-map-pin text-teal-600"></i> Jumlah unit rumah aktif di TKB
                             </div>
                         </div>
                     </div>
 
-                    <div class="tkb-card p-4 bg-slate-50 border-slate-200 col-span-1 md:col-span-2 lg:col-span-1">
+                    <div class="tkb-card p-4 bg-slate-50 border-2 border-slate-300 shadow-sm col-span-1 md:col-span-2 lg:col-span-1">
                         <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
                             <span class="flex items-center gap-2">
                                 <i class="fa-solid fa-map-location-dot text-emerald-600"></i> INFORMASI WILAYAH
@@ -388,7 +430,7 @@
                 </div>
 
                 <!-- SALDO AKHIR BULAN HIGHLIGHT CARD -->
-                <div class="tkb-card p-5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white shadow-lg rounded-2xl border border-emerald-300 relative overflow-hidden transition-all duration-300 hover:shadow-xl">
+                <div class="tkb-card p-5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white shadow-lg rounded-2xl border border-emerald-300 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] transform cursor-pointer">
                     <div class="absolute -right-6 -bottom-8 text-white/10 text-9xl pointer-events-none">
                         <i class="fa-solid fa-vault"></i>
                     </div>
@@ -921,60 +963,80 @@
         </div>
 
         <!-- SECTION 2: DATA WARGA TAB -->
-        <div id="section-warga" class="hidden space-y-4">
-            <div class="flex flex-wrap justify-center items-center gap-3 max-w-5xl mx-auto">
-                <div class="tkb-card px-4 py-2.5 bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-sm rounded-xl flex items-center gap-3 border border-emerald-400 min-w-[180px] hover:shadow transition">
-                    <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-sm shrink-0 shadow-inner backdrop-blur-sm">
+    <div id="section-warga" class="hidden space-y-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 max-w-6xl mx-auto">
+            <div onclick="window.filterByLingkungan('Lingkungan 1')" class="tkb-card p-3.5 bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-sm rounded-xl flex flex-col justify-between border border-emerald-400 hover:shadow-lg hover:-translate-y-0.5 transition cursor-pointer select-none">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100" id="labelCardL1Summary">Lingkungan 1</span>
+                    <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs shrink-0 shadow-inner backdrop-blur-sm">
                         <i class="fa-solid fa-house-chimney-user text-emerald-100"></i>
                     </div>
-                    <div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-100 block leading-tight" id="labelCardL1Summary">Lingkungan 1</span>
-                        <span class="text-lg font-black tracking-tight text-white block mt-0.5 leading-none" id="wargaSummaryL1">0 Rumah</span>
-                    </div>
                 </div>
+                <div>
+                    <span class="text-base font-black tracking-tight text-white block leading-none" id="wargaSummaryL1">0 Rumah</span>
+                </div>
+            </div>
 
-                <div class="tkb-card px-4 py-2.5 bg-gradient-to-br from-teal-600 to-cyan-800 text-white shadow-sm rounded-xl flex items-center gap-3 border border-teal-400 min-w-[180px] hover:shadow transition">
-                    <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-sm shrink-0 shadow-inner backdrop-blur-sm">
+            <div onclick="window.filterByLingkungan('Lingkungan 2')" class="tkb-card p-3.5 bg-gradient-to-br from-teal-600 to-cyan-800 text-white shadow-sm rounded-xl flex flex-col justify-between border border-teal-400 hover:shadow-lg hover:-translate-y-0.5 transition cursor-pointer select-none">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-100" id="labelCardL2Summary">Lingkungan 2</span>
+                    <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs shrink-0 shadow-inner backdrop-blur-sm">
                         <i class="fa-solid fa-house-chimney-user text-teal-100"></i>
                     </div>
-                    <div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-100 block leading-tight" id="labelCardL2Summary">Lingkungan 2</span>
-                        <span class="text-lg font-black tracking-tight text-white block mt-0.5 leading-none" id="wargaSummaryL2">0 Rumah</span>
-                    </div>
                 </div>
+                <div>
+                    <span class="text-base font-black tracking-tight text-white block leading-none" id="wargaSummaryL2">0 Rumah</span>
+                </div>
+            </div>
 
-                <div class="tkb-card px-4 py-2.5 bg-gradient-to-br from-cyan-600 to-sky-800 text-white shadow-sm rounded-xl flex items-center gap-3 border border-cyan-400 min-w-[180px] hover:shadow transition">
-                    <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-sm shrink-0 shadow-inner backdrop-blur-sm">
+            <div onclick="window.filterByLingkungan('Lingkungan 3')" class="tkb-card p-3.5 bg-gradient-to-br from-cyan-600 to-sky-800 text-white shadow-sm rounded-xl flex flex-col justify-between border border-cyan-400 hover:shadow-lg hover:-translate-y-0.5 transition cursor-pointer select-none">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-cyan-100" id="labelCardL3Summary">Lingkungan 3</span>
+                    <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs shrink-0 shadow-inner backdrop-blur-sm">
                         <i class="fa-solid fa-house-chimney-user text-cyan-100"></i>
                     </div>
-                    <div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-cyan-100 block leading-tight" id="labelCardL3Summary">Lingkungan 3</span>
-                        <span class="text-lg font-black tracking-tight text-white block mt-0.5 leading-none" id="wargaSummaryL3">0 Rumah</span>
+                </div>
+                <div>
+                    <span class="text-base font-black tracking-tight text-white block leading-none" id="wargaSummaryL3">0 Rumah</span>
+                </div>
+            </div>
+
+            <div onclick="window.filterByLingkungan('')" class="tkb-card p-3.5 bg-gradient-to-br from-slate-50 to-emerald-50 border border-emerald-200 rounded-xl flex flex-col justify-between shadow-sm hover:shadow hover:-translate-y-0.5 transition cursor-pointer select-none" title="Klik untuk menampilkan seluruh warga">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Semua</span>
+                    <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                        <i class="fa-solid fa-users"></i>
                     </div>
                 </div>
+                <div>
+                    <span class="text-sm font-black text-slate-900 block leading-none">Semua Warga</span>
+                </div>
+            </div>
 
-                <div class="hidden sm:block h-8 w-px bg-slate-200 mx-1"></div>
-
-                <div class="tkb-card px-3 py-2 bg-gradient-to-br from-slate-50 to-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 shadow-sm hover:shadow transition">
+            <div onclick="window.filterByLingkungan('Dihuni')" class="tkb-card p-3.5 bg-gradient-to-br from-slate-50 to-emerald-50 border border-emerald-200 rounded-xl flex flex-col justify-between shadow-sm hover:shadow hover:-translate-y-0.5 transition cursor-pointer select-none" title="Klik untuk memfilter rumah terhuni">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Dihuni</span>
                     <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs shrink-0">
                         <i class="fa-solid fa-user-check"></i>
                     </div>
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider block leading-tight">Dihuni</span>
-                        <span class="text-sm font-black text-slate-900 block leading-none mt-0.5" id="wargaSummaryDihuni">0 Rumah</span>
-                    </div>
                 </div>
+                <div>
+                    <span class="text-base font-black text-slate-900 block leading-none" id="wargaSummaryDihuni">0 Rumah</span>
+                </div>
+            </div>
 
-                <div class="tkb-card px-3 py-2 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl flex items-center gap-2.5 shadow-sm hover:shadow transition">
+            <div onclick="window.filterByLingkungan('Kosong')" class="tkb-card p-3.5 bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 rounded-xl flex flex-col justify-between shadow-sm hover:shadow hover:-translate-y-0.5 transition cursor-pointer select-none" title="Klik untuk memfilter rumah kosong">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Kosong</span>
                     <div class="w-7 h-7 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center text-xs shrink-0">
                         <i class="fa-solid fa-house-circle-xmark"></i>
                     </div>
-                    <div class="text-left">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block leading-tight">Kosong</span>
-                        <span class="text-sm font-black text-slate-700 block leading-none mt-0.5" id="wargaSummaryKosong">0 Rumah</span>
-                    </div>
+                </div>
+                <div>
+                    <span class="text-base font-black text-slate-700 block leading-none" id="wargaSummaryKosong">0 Rumah</span>
                 </div>
             </div>
+        </div>
 
             <div class="tkb-card p-4">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
@@ -1028,13 +1090,21 @@
                         <h2 class="text-lg font-bold text-emerald-900">Catatan Kas Masuk & Kas Keluar</h2>
                         <p class="text-xs text-slate-500">Pencatatan buku kas operasional paguyuban secara teliti dan akuntabel.</p>
                     </div>
-                    <button onclick="window.openModalTransaksi()" class="admin-only bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg font-semibold shrink-0 items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-plus"></i> Catat Transaksi Baru
-                    </button>
+                    <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <input type="text" id="searchTransaksi" onkeyup="window.filterTabelTransaksi()" placeholder="Cari keterangan, kategori, metode..." class="border border-slate-300 rounded-lg text-xs px-3 py-2 w-full sm:w-64 focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <button onclick="window.resetFilterTransaksi()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-3 py-2 rounded-lg font-bold transition shrink-0" title="Reset Filter">
+                                <i class="fa-solid fa-rotate-right"></i> Reset
+                            </button>
+                        </div>
+                        <button onclick="window.openModalTransaksi()" class="admin-only bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg font-semibold shrink-0 items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-plus"></i> Catat Transaksi Baru
+                        </button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100/70 border-2 border-emerald-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                    <div onclick="window.filterTransaksiCard('Penerimaan Kas Tunai')" class="bg-gradient-to-br from-emerald-50 to-emerald-100/70 border-2 border-emerald-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                         <div>
                             <span class="text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider block flex items-center gap-1">
                                 <i class="fa-solid fa-circle-arrow-down text-emerald-600"></i> Penerimaan Kas Tunai
@@ -1047,7 +1117,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-teal-50 to-teal-100/70 border-2 border-teal-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                    <div onclick="window.filterTransaksiCard('Penerimaan Bank')" class="bg-gradient-to-br from-teal-50 to-teal-100/70 border-2 border-teal-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                         <div>
                             <span class="text-[10px] font-extrabold text-teal-800 uppercase tracking-wider block flex items-center gap-1">
                                 <i class="fa-solid fa-circle-arrow-down text-teal-600"></i> Penerimaan Bank
@@ -1060,7 +1130,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-orange-50 to-amber-100/70 border-2 border-orange-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                    <div onclick="window.filterTransaksiCard('Pengeluaran Kas Tunai')" class="bg-gradient-to-br from-orange-50 to-amber-100/70 border-2 border-orange-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                         <div>
                             <span class="text-[10px] font-extrabold text-orange-900 uppercase tracking-wider block flex items-center gap-1">
                                 <i class="fa-solid fa-circle-arrow-up text-orange-600"></i> Pengeluaran Kas Tunai
@@ -1073,7 +1143,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-rose-50 to-amber-100/70 border-2 border-amber-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                    <div onclick="window.filterTransaksiCard('Pengeluaran Bank')" class="bg-gradient-to-br from-rose-50 to-amber-100/70 border-2 border-amber-300 p-3.5 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                         <div>
                             <span class="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider block flex items-center gap-1">
                                 <i class="fa-solid fa-circle-arrow-up text-amber-600"></i> Pengeluaran Bank
@@ -1151,31 +1221,32 @@
         <div id="section-tagihan" class="hidden space-y-4">
             
             <!-- Pos Iuran Breakdown Summary Card -->
-            <div class="tkb-card p-5 bg-white border border-emerald-100 shadow-sm">
-                <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-                    <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-receipt text-emerald-600"></i> Total Penerimaan Setiap Pos Iuran (Bulan Berjalan)
+            <div class="tkb-card p-5 bg-gradient-to-br from-emerald-50/80 via-teal-50/50 to-white border-2 border-emerald-300/80 shadow-md">
+                <div class="flex items-center justify-between mb-3 pb-2 border-b-2 border-emerald-200">
+                    <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white inline-flex items-center justify-center text-sm shadow-sm"><i class="fa-solid fa-receipt"></i></span>
+                        Total Penerimaan Setiap Pos Iuran (Bulan Berjalan)
                     </h3>
-                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200">Akumulasi Warga Lunas</span>
+                    <span class="text-[10px] bg-emerald-600 text-white px-3 py-1 rounded-full font-bold shadow-sm">Akumulasi Warga Lunas</span>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
-                    <div class="bg-emerald-50/50 p-3 rounded-xl border border-emerald-100 flex flex-col justify-between">
+                    <div class="bg-emerald-50/50 p-3 rounded-xl border-2 border-emerald-300 flex flex-col justify-between shadow-sm">
                         <span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1"><i class="fa-solid fa-broom text-emerald-600"></i> Kebersihan</span>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosKebersihan">Rp 0</span>
                     </div>
-                    <div class="bg-teal-50/50 p-3 rounded-xl border border-teal-100 flex flex-col justify-between">
+                    <div class="bg-teal-50/50 p-3 rounded-xl border-2 border-teal-300 flex flex-col justify-between shadow-sm">
                         <span class="text-[11px] font-bold text-teal-800 flex items-center gap-1"><i class="fa-solid fa-shield-halved text-teal-600"></i> Keamanan</span>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosKeamanan">Rp 0</span>
                     </div>
-                    <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100 flex flex-col justify-between">
+                    <div class="bg-amber-50/50 p-3 rounded-xl border-2 border-amber-300 flex flex-col justify-between shadow-sm">
                         <span class="text-[11px] font-bold text-amber-800 flex items-center gap-1"><i class="fa-solid fa-hand-holding-heart text-amber-600"></i> Kas Sosial</span>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosSosial">Rp 0</span>
                     </div>
-                    <div class="bg-purple-50/50 p-3 rounded-xl border border-purple-100 flex flex-col justify-between">
+                    <div class="bg-purple-50/50 p-3 rounded-xl border-2 border-purple-300 flex flex-col justify-between shadow-sm">
                         <span class="text-[11px] font-bold text-purple-800 flex items-center gap-1"><i class="fa-solid fa-tree text-purple-600"></i> Kas Lingkungan</span>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosLingkungan">Rp 0</span>
                     </div>
-                    <div class="bg-sky-50/50 p-3 rounded-xl border border-sky-100 flex flex-col justify-between col-span-2 sm:col-span-1">
+                    <div class="bg-sky-50/50 p-3 rounded-xl border-2 border-sky-300 flex flex-col justify-between col-span-2 sm:col-span-1 shadow-sm">
                         <span class="text-[11px] font-bold text-sky-800 flex items-center gap-1"><i class="fa-solid fa-building-flag text-sky-600"></i> Kas Paguyuban</span>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosPaguyuban">Rp 0</span>
                     </div>
@@ -1183,7 +1254,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center">
+                <div onclick="window.filterIuranCard('Lingkungan 1')" class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                     <div>
                         <div class="flex items-center gap-1.5 mb-1">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
@@ -1201,7 +1272,7 @@
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center">
+                <div onclick="window.filterIuranCard('Lingkungan 2')" class="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                     <div>
                         <div class="flex items-center gap-1.5 mb-1">
                             <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
@@ -1219,7 +1290,7 @@
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-cyan-50 to-sky-50 border border-cyan-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center">
+                <div onclick="window.filterIuranCard('Lingkungan 3')" class="bg-gradient-to-br from-cyan-50 to-sky-50 border border-cyan-200 p-3.5 rounded-xl shadow-sm flex justify-between items-center cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition select-none">
                     <div>
                         <div class="flex items-center gap-1.5 mb-1">
                             <span class="w-2.5 h-2.5 rounded-full bg-cyan-600"></span>
@@ -1274,18 +1345,23 @@
                         <p class="text-xs text-slate-500">Iuran per warga standar <span id="labelTarifPilihan">Rp 50.000</span> / bulan.</p>
                     </div>
                     <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
-                        <input type="text" id="searchIuran" onkeyup="window.filterTabelIuran()" placeholder="Cari nama, blok, lingkungan..." class="border border-slate-300 rounded-lg text-xs px-3 py-2 w-full sm:w-64 focus:ring-2 focus:ring-emerald-500 outline-none">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <input type="text" id="searchIuran" onkeyup="window.filterTabelIuran()" placeholder="Cari nama, blok, lingkungan..." class="border border-slate-300 rounded-lg text-xs px-3 py-2 w-full sm:w-64 focus:ring-2 focus:ring-emerald-500 outline-none">
+                            <button onclick="window.resetFilterIuran()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-3 py-2 rounded-lg font-bold transition shrink-0" title="Reset Filter">
+                                <i class="fa-solid fa-rotate-right"></i> Reset
+                            </button>
+                        </div>
                         <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-2 rounded-lg font-bold shrink-0 whitespace-nowrap" id="labelTarifIuranBadge">Rp 50.000 / Rumah / Bulan</span>
                     </div>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left border-collapse" id="tabelRekapIuranMatriks">
+                    <table class="w-full text-xs text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-100 text-slate-800 font-bold border-b">
+                            <tr class="bg-slate-100 text-slate-700 font-semibold border-b">
                                 <th class="p-3">No</th>
                                 <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="window.sortIuran('nama')">
-                                    Nama Warga <span id="sortIuranIcon_nama" class="text-[10px] ml-1"><i class="fa-solid fa-sort opacity-40"></i></span>
+                                    Nama Kepala Keluarga <span id="sortIuranIcon_nama" class="text-[10px] ml-1"><i class="fa-solid fa-sort opacity-40"></i></span>
                                 </th>
                                 <th class="p-3 cursor-pointer hover:bg-slate-200 transition select-none" onclick="window.sortIuran('blok')">
                                     Blok / No <span id="sortIuranIcon_blok" class="text-[10px] ml-1"><i class="fa-solid fa-sort opacity-40"></i></span>
@@ -1299,6 +1375,7 @@
                                 <th class="p-3 text-center cursor-pointer hover:bg-slate-200 transition select-none" onclick="window.sortIuran('statusBayar')">
                                     Status Pembayaran <span id="sortIuranIcon_statusBayar" class="text-[10px] ml-1"><i class="fa-solid fa-sort opacity-40"></i></span>
                                 </th>
+                                <th class="p-3 text-center">Tipe / Metode</th>
                                 <th class="p-3 text-center cursor-pointer hover:bg-slate-200 transition select-none" onclick="window.sortIuran('tglBayar')">
                                     Tgl Bayar <span id="sortIuranIcon_tglBayar" class="text-[10px] ml-1"><i class="fa-solid fa-sort opacity-40"></i></span>
                                 </th>
@@ -2064,7 +2141,6 @@
             let currIdx = idxBulan - 1;
             let currTahun = numTahun;
 
-            // Looping mundur hingga 5 tahun (60 bulan) ke belakang
             for (let i = 0; i < 60; i++) {
                 if (currIdx < 0) {
                     currIdx = 11;
@@ -2076,7 +2152,6 @@
                 if (databasePeriode[keyLalu]) {
                     const p = databasePeriode[keyLalu];
                     
-                    // Jika ada kalibrasi manual, kita pakai saldo akhirnya
                     if (p.isManualCalibrated) {
                         return window.hitungSaldoAkhirPeriode(keyLalu);
                     }
@@ -2084,9 +2159,7 @@
                     const hasTransaksi = p.transaksi && p.transaksi.length > 0;
                     const hasIuranLunas = p.iuranWarga && Object.values(p.iuranWarga).some(iw => iw.statusBayar === 'Sudah Bayar');
 
-                    // Jika bulan tersebut ada aktivitas (transaksi/ada yang bayar)
                     if (hasTransaksi || hasIuranLunas) {
-                        // Hitung saldo awal bulan tersebut secara rekursif (mundur lagi)
                         const saldoAwalLalu = window.getSaldoAwalDinamis(DAFTAR_BULAN[currIdx], currTahun.toString());
                         
                         let masuk = 0;
@@ -2098,14 +2171,12 @@
                             });
                         }
                         
-                        // Kembalikan saldo akhir bulan tersebut
                         return saldoAwalLalu + masuk - keluar;
                     }
                 }
-                currIdx--; // Lanjut cek bulan sebelumnya
+                currIdx--;
             }
 
-            // Jika tidak ada data sama sekali di masa lalu, pakai saldo awal default
             return settings.kasTunaiAwal + settings.kasBankAwal;
         };
 
@@ -2425,7 +2496,6 @@
             legendEl.innerHTML = legendHtml;
         };
 
-        // MODERN TREND CHART RENDERER & POS IURAN ACCUMULATION
         window.renderTrendAnalysis = function() {
             const startBulan = document.getElementById('rangeStartBulan').value;
             const startTahun = document.getElementById('rangeStartTahun').value;
@@ -2542,7 +2612,6 @@
 
             document.getElementById('tbodyTrendTable').innerHTML = tbodyHtml;
 
-            // Render Modern Chart.js Mix (Grouped Bar + Line Combo)
             const ctxTrend = document.getElementById('chartTrendBar').getContext('2d');
             if (chartTrendBarInstance) chartTrendBarInstance.destroy();
 
@@ -2684,6 +2753,18 @@
             window.renderMasterWarga();
         };
 
+        window.filterByLingkungan = function(namaLingkungan) {
+            const searchInput = document.getElementById('searchWarga');
+            if (searchInput) {
+                if (searchInput.value === namaLingkungan) {
+                    searchInput.value = ''; // Toggle reset jika diklik ulang
+                } else {
+                    searchInput.value = namaLingkungan;
+                }
+                window.renderMasterWarga();
+            }
+        };
+
         window.renderMasterWarga = function() {
             const tbody = document.getElementById('tbodyWargaMaster');
             let html = '';
@@ -2711,7 +2792,8 @@
             let filtered = masterWarga.filter(w => {
                 return w.nama.toLowerCase().includes(filterText) ||
                        w.blok.toLowerCase().includes(filterText) ||
-                       w.lingkungan.toLowerCase().includes(filterText);
+                       w.lingkungan.toLowerCase().includes(filterText) ||
+                       w.statusRumah.toLowerCase().includes(filterText);
             });
 
             if (masterWargaSortCol) {
@@ -2772,6 +2854,46 @@
             window.renderMasterWarga();
         };
 
+        window.filterTransaksiCard = function(type) {
+            const searchInput = document.getElementById('searchTransaksi');
+            if (searchInput) {
+                if (searchInput.value === type) {
+                    searchInput.value = '';
+                } else {
+                    searchInput.value = type;
+                }
+                window.renderTransaksiTable();
+            }
+        };
+
+        window.filterIuranCard = function(lingkunganName) {
+            const searchInput = document.getElementById('searchIuran');
+            if (searchInput) {
+                if (searchInput.value === lingkunganName) {
+                    searchInput.value = '';
+                } else {
+                    searchInput.value = lingkunganName;
+                }
+                window.renderIuranMatrix();
+            }
+        };
+
+        window.resetFilterIuran = function() {
+            const searchInput = document.getElementById('searchIuran');
+            if (searchInput) {
+                searchInput.value = '';
+                window.renderIuranMatrix();
+            }
+        };
+
+        window.resetFilterTransaksi = function() {
+            const searchInput = document.getElementById('searchTransaksi');
+            if (searchInput) {
+                searchInput.value = '';
+                window.renderTransaksiTable();
+            }
+        };
+
         window.renderTransaksiTable = function() {
             const tbody = document.getElementById('tbodyTransaksi');
             let html = '';
@@ -2779,21 +2901,11 @@
             let masukTunai = 0, masukBank = 0;
             let keluarTunai = 0, keluarBank = 0;
 
-            let list = [...dataTransaksi];
+            const rawSearch = (document.getElementById('searchTransaksi')?.value || '').trim();
+            const searchText = rawSearch.toLowerCase();
 
-            if (transSortCol) {
-                list.sort((a, b) => {
-                    let valA = a[transSortCol];
-                    let valB = b[transSortCol];
-                    if (typeof valA === 'string') valA = valA.toLowerCase();
-                    if (typeof valB === 'string') valB = valB.toLowerCase();
-                    if (valA < valB) return transSortAsc ? -1 : 1;
-                    if (valA > valB) return transSortAsc ? 1 : -1;
-                    return 0;
-                });
-            }
-
-            list.forEach(t => {
+            // Calculate true total stats first regardless of active search filters
+            dataTransaksi.forEach(t => {
                 if (t.jenis === 'Penerimaan') {
                     if (t.metode === 'Kas Tunai') masukTunai += t.nominal;
                     else masukBank += t.nominal;
@@ -2809,32 +2921,63 @@
                         masukTunai += t.nominal;
                     }
                 }
+            });
 
-                let rowBgClass = 'bg-slate-50/60 hover:bg-slate-100/70 border-l-4 border-l-slate-400';
-                let iconJenis = '<i class="fa-solid fa-right-left text-purple-600 mr-1"></i>';
-                let badgeJenisClass = 'bg-purple-100 text-purple-800 border border-purple-300';
-                let nominalColorClass = 'text-purple-700 font-black';
-
-                if (t.jenis === 'Penerimaan') {
-                    rowBgClass = 'bg-emerald-50/60 hover:bg-emerald-100/70 border-l-4 border-l-emerald-500';
-                    iconJenis = '<i class="fa-solid fa-circle-arrow-down text-emerald-600 mr-1"></i>';
-                    badgeJenisClass = 'bg-emerald-100 text-emerald-800 border border-emerald-300';
-                    nominalColorClass = 'text-emerald-700 font-black';
-                } else if (t.jenis === 'Pengeluaran') {
-                    rowBgClass = 'bg-orange-50/60 hover:bg-orange-100/70 border-l-4 border-l-orange-500';
-                    iconJenis = '<i class="fa-solid fa-circle-arrow-up text-orange-600 mr-1"></i>';
-                    badgeJenisClass = 'bg-orange-100 text-orange-800 border border-orange-300';
-                    nominalColorClass = 'text-orange-700 font-black';
+            // Filter list for table display only
+            let list = dataTransaksi.filter(t => {
+                if (rawSearch === 'Penerimaan Kas Tunai') {
+                    return t.jenis === 'Penerimaan' && t.metode === 'Kas Tunai';
+                }
+                if (rawSearch === 'Penerimaan Bank') {
+                    return t.jenis === 'Penerimaan' && t.metode === 'Transfer Bank';
+                }
+                if (rawSearch === 'Pengeluaran Kas Tunai') {
+                    return t.jenis === 'Pengeluaran' && t.metode === 'Kas Tunai';
+                }
+                if (rawSearch === 'Pengeluaran Bank') {
+                    return t.jenis === 'Pengeluaran' && t.metode === 'Transfer Bank';
                 }
 
+                return t.tanggal.toLowerCase().includes(searchText) ||
+                       t.jenis.toLowerCase().includes(searchText) ||
+                       t.kategori.toLowerCase().includes(searchText) ||
+                       t.keterangan.toLowerCase().includes(searchText) ||
+                       (t.metode || '').toLowerCase().includes(searchText);
+            });
+
+            if (transSortCol) {
+                list.sort((a, b) => {
+                    let valA = a[transSortCol];
+                    let valB = b[transSortCol];
+                    if (typeof valA === 'string') valA = valA.toLowerCase();
+                    if (typeof valB === 'string') valB = valB.toLowerCase();
+                    if (valA < valB) return transSortAsc ? -1 : 1;
+                    if (valA > valB) return transSortAsc ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            list.forEach((t, idx) => {
+                let badgeJenis = '';
+                if (t.jenis === 'Penerimaan') {
+                    badgeJenis = '<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Penerimaan</span>';
+                } else if (t.jenis === 'Pengeluaran') {
+                    badgeJenis = '<span class="bg-orange-100 text-orange-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Pengeluaran</span>';
+                } else {
+                    badgeJenis = '<span class="bg-sky-100 text-sky-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Transfer</span>';
+                }
+
+                const nominalColor = t.jenis === 'Penerimaan' ? 'text-emerald-600' : (t.jenis === 'Pengeluaran' ? 'text-orange-600' : 'text-slate-800');
+                const nominalPrefix = t.jenis === 'Penerimaan' ? '+' : (t.jenis === 'Pengeluaran' ? '-' : '');
+
                 html += `
-                    <tr class="${rowBgClass} transition">
-                        <td class="p-3 font-mono text-slate-700">${t.tanggal}</td>
-                        <td class="p-3 font-bold"><span class="px-2 py-0.5 rounded-md text-[10px] ${badgeJenisClass} inline-flex items-center">${iconJenis}${t.jenis}</span></td>
-                        <td class="p-3 text-slate-700 font-semibold">${t.kategori}</td>
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-mono text-slate-600">${t.tanggal}</td>
+                        <td class="p-3">${badgeJenis}</td>
+                        <td class="p-3 font-semibold text-slate-700">${t.kategori}</td>
                         <td class="p-3 text-slate-800">${t.keterangan}</td>
-                        <td class="p-3 text-slate-600"><span class="bg-white/80 border border-slate-200 px-2 py-0.5 rounded text-[10px] font-medium">${t.metode || '-'}</span></td>
-                        <td class="p-3 text-right ${nominalColorClass}">${t.jenis === 'Pengeluaran' ? '-' : (t.jenis === 'Penerimaan' ? '+' : '')}${formatRupiah(t.nominal)}</td>
+                        <td class="p-3 font-medium text-slate-600">${t.metode || '-'}</td>
+                        <td class="p-3 text-right font-black ${nominalColor}">${nominalPrefix}${formatRupiah(t.nominal)}</td>
                         <td class="p-3 text-center no-print admin-only space-x-1">
                             <button onclick="window.editTransaksi(${t.id})" class="text-blue-600 hover:text-blue-800 p-1" title="Edit Transaksi"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button onclick="window.openModalDeleteTransaksi(${t.id})" class="text-red-500 hover:text-red-700 p-1" title="Hapus Transaksi"><i class="fa-solid fa-trash"></i></button>
@@ -2843,23 +2986,22 @@
                 `;
             });
 
-            tbody.innerHTML = html;
+            if (list.length === 0) {
+                html = `<tr><td colspan="7" class="p-4 text-center text-slate-400 italic">Belum ada catatan transaksi yang sesuai dengan filter.</td></tr>`;
+            }
+
+            if (tbody) tbody.innerHTML = html;
 
             document.getElementById('transInfoMasukTunai').innerText = formatRupiah(masukTunai);
             document.getElementById('transInfoMasukBank').innerText = formatRupiah(masukBank);
             document.getElementById('transInfoKeluarTunai').innerText = formatRupiah(keluarTunai);
             document.getElementById('transInfoKeluarBank').innerText = formatRupiah(keluarBank);
 
-            const sisaTunai = activeKasTunaiAwal + masukTunai - keluarTunai;
-            const sisaBank = activeKasBankAwal + masukBank - keluarBank;
+            const sisaTunaiVal = activeKasTunaiAwal + masukTunai - keluarTunai;
+            const sisaBankVal = activeKasBankAwal + masukBank - keluarBank;
 
-            document.getElementById('transSisaTunai').innerText = formatRupiah(sisaTunai);
-            document.getElementById('transSisaBank').innerText = formatRupiah(sisaBank);
-
-            const kpiTunaiEl = document.getElementById('kpiSisaTunai');
-            const kpiBankEl = document.getElementById('kpiSisaBank');
-            if (kpiTunaiEl) kpiTunaiEl.innerText = formatRupiah(sisaTunai);
-            if (kpiBankEl) kpiBankEl.innerText = formatRupiah(sisaBank);
+            document.getElementById('transSisaTunai').innerText = formatRupiah(sisaTunaiVal);
+            document.getElementById('transSisaBank').innerText = formatRupiah(sisaBankVal);
         };
 
         window.sortTransaksi = function(col) {
@@ -2883,6 +3025,10 @@
                     : '<i class="fa-solid fa-sort-down text-emerald-400"></i>';
             }
 
+            window.renderTransaksiTable();
+        };
+
+        window.filterTabelTransaksi = function() {
             window.renderTransaksiTable();
         };
 
@@ -2915,6 +3061,8 @@
             let html = '';
 
             const searchText = (document.getElementById('searchIuran').value || '').toLowerCase();
+            const keyAktif = window.getSelectedKey();
+            const pAktif = databasePeriode[keyAktif] || { iuranWarga: {}, transaksi: [] };
 
             let list = dataWarga.filter(w => {
                 return w.nama.toLowerCase().includes(searchText) ||
@@ -2940,6 +3088,17 @@
                     ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center justify-center gap-1"><i class="fa-solid fa-check"></i> Lunas</span>' 
                     : '<span class="bg-red-100 text-red-800 text-[10px] px-2.5 py-1 rounded-full font-bold flex items-center justify-center gap-1"><i class="fa-solid fa-xmark"></i> Belum Bayar</span>';
 
+                let metodeBayarBadge = '<span class="text-slate-400">-</span>';
+                if (isLunas) {
+                    const matchedTrans = (pAktif.transaksi || []).find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+                    const mName = matchedTrans ? (matchedTrans.metode || 'Transfer Bank') : 'Transfer Bank';
+                    if (mName.toLowerCase().includes('tunai') || mName.toLowerCase().includes('cash')) {
+                        metodeBayarBadge = '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-money-bill-wave"></i> Tunai</span>';
+                    } else {
+                        metodeBayarBadge = '<span class="bg-teal-50 text-teal-700 border border-teal-200 text-[10px] px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-building-columns"></i> Transfer</span>';
+                    }
+                }
+
                 const actionBtn = isLunas
                     ? `<button onclick="window.openModalConfirmUnbayar(${w.id})" class="bg-amber-100 text-amber-800 hover:bg-amber-200 px-2.5 py-1 rounded font-bold text-[10px]">Tandai Belum</button>`
                     : `<button onclick="window.openModalConfirmBayar(${w.id})" class="bg-emerald-600 text-white hover:bg-emerald-700 px-3 py-1 rounded font-bold text-[10px] shadow">Bayar Sekarang</button>`;
@@ -2956,6 +3115,7 @@
                         <td class="p-3 text-slate-600">${w.lingkungan}</td>
                         <td class="p-3 text-right font-bold text-slate-800">${formatRupiah(w.totalTarifPersonal)}</td>
                         <td class="p-3 text-center">${badgeStatus}</td>
+                        <td class="p-3 text-center">${metodeBayarBadge}</td>
                         <td class="p-3 text-center font-mono">${tglBayarDisplay}</td>
                         <td class="p-3 text-center no-print admin-only">${actionBtn}</td>
                     </tr>
@@ -3135,7 +3295,7 @@
             const today = new Date();
             const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const tglFormatted = `${String(today.getDate()).padStart(2, '0')} ${monthsShort[today.getMonth()]} ${today.getFullYear()}`;
-            const isoDate = today.toISOString().split('T')[0];
+            const isoDate = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
 
             if (!p.iuranWarga[w.id]) p.iuranWarga[w.id] = {};
             p.iuranWarga[w.id].statusBayar = "Sudah Bayar";
@@ -3201,7 +3361,7 @@
             if (w) {
                 document.getElementById('editTglNamaWarga').innerText = w.nama;
                 document.getElementById('editTglBlokWarga').innerText = w.blok;
-                document.getElementById('inputNewTglBayar').value = new Date().toISOString().split('T')[0];
+                document.getElementById('inputNewTglBayar').value = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
                 document.getElementById('modalEditTglBayar').classList.remove('hidden');
             }
         };
@@ -3243,7 +3403,7 @@
             document.getElementById('formTransaksi').reset();
             document.getElementById('transId').value = '';
             document.getElementById('modalTransaksiTitle').innerText = 'Tambah Transaksi Kas';
-            document.getElementById('transTanggal').value = new Date().toISOString().split('T')[0];
+            document.getElementById('transTanggal').value = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
             window.updateKategoriOptions();
             document.getElementById('modalTransaksi').classList.remove('hidden');
         };
@@ -3340,7 +3500,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `Backup_Keuangan_TKB_${new Date().toISOString().split('T')[0]}.json`);
+            downloadAnchor.setAttribute("download", `Backup_Keuangan_TKB_${new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' })}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -3369,46 +3529,146 @@
             reader.readAsText(file);
         };
 
-        window.exportDataCSV = function() {
-            const key = window.getSelectedKey();
+        window.exportDataToSpreadsheet = function() {
             const bulan = document.getElementById('filterBulan').value;
             const tahun = document.getElementById('filterTahun').value;
 
-            let csv = '\uFEFF';
-            csv += 'sep=;\n';
-            csv += `LAPORAN KEUANGAN PAGUYUBAN PERUMAHAN TIKUNG KOTA BARU\n`;
-            csv += `Periode;${bulan} ${tahun}\n\n`;
+            let htmlExcel = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><style> table { border-collapse: collapse; } th, td { border: 1px solid #000; padding: 5px; font-family: sans-serif; font-size: 12px; } th { background-color: #047857; color: white; font-weight: bold; text-align: center; } .text-right { text-align: right; } .text-center { text-align: center; } </style></head><body>';
+            
+            htmlExcel += '<h2>LAPORAN KEUANGAN PAGUYUBAN TKB</h2>';
+            htmlExcel += '<h3>Periode: ' + bulan + ' ' + tahun + '</h3>';
 
-            csv += `RINGKASAN KAS\n`;
-            csv += `Saldo Awal;${document.getElementById('kpiSaldoAwal').innerText}\n`;
-            csv += `Total Penerimaan;${document.getElementById('kpiPenerimaan').innerText}\n`;
-            csv += `Total Pengeluaran;${document.getElementById('kpiPengeluaran').innerText}\n`;
-            csv += `Saldo Akhir;${document.getElementById('kpiSaldoAkhir').innerText}\n`;
-            csv += `Total Tunggakan;${document.getElementById('kpiTunggakan').innerText}\n\n`;
+            // Tabel Ringkasan Kas
+            htmlExcel += '<h4>Ringkasan Kas</h4>';
+            htmlExcel += '<table>';
+            htmlExcel += '<tr><th>Keterangan</th><th>Jumlah</th></tr>';
+            htmlExcel += '<tr><td>Saldo Awal</td><td class="text-right">' + document.getElementById('kpiSaldoAwal').innerText + '</td></tr>';
+            htmlExcel += '<tr><td>Total Penerimaan</td><td class="text-right">' + document.getElementById('kpiPenerimaan').innerText + '</td></tr>';
+            htmlExcel += '<tr><td>Total Pengeluaran</td><td class="text-right">' + document.getElementById('kpiPengeluaran').innerText + '</td></tr>';
+            htmlExcel += '<tr><td>Saldo Akhir</td><td class="text-right">' + document.getElementById('kpiSaldoAkhir').innerText + '</td></tr>';
+            htmlExcel += '<tr><td>Total Tunggakan</td><td class="text-right">' + document.getElementById('kpiTunggakan').innerText + '</td></tr>';
+            htmlExcel += '</table>';
 
-            csv += `RINCIAN IURAN WARGA\n`;
-            csv += `No;Nama;Blok;Lingkungan;Status Rumah;Tarif Personal;Status Bayar;Tanggal Bayar\n`;
+            htmlExcel += '<br>';
 
-            dataWarga.forEach((w, idx) => {
-                csv += `${idx + 1};"${w.nama}";"${w.blok}";"${w.lingkungan}";"${w.statusRumah}";"${w.totalTarifPersonal}";"${w.statusBayar}";"${w.tglBayar}"\n`;
+            // Tabel Data Warga
+            htmlExcel += '<h4>Data Warga & Pembayaran Iuran</h4>';
+            htmlExcel += '<table>';
+            htmlExcel += '<tr><th>No</th><th>Nama Kepala Keluarga</th><th>Blok</th><th>Lingkungan</th><th>Status Rumah</th><th>Tarif</th><th>Status Bayar</th><th>Tgl Bayar</th></tr>';
+            
+            dataWarga.forEach((w, index) => {
+                htmlExcel += '<tr>';
+                htmlExcel += '<td class="text-center">' + (index + 1) + '</td>';
+                htmlExcel += '<td>' + w.nama + '</td>';
+                htmlExcel += '<td class="text-center">' + w.blok + '</td>';
+                htmlExcel += '<td>' + w.lingkungan + '</td>';
+                htmlExcel += '<td class="text-center">' + w.statusRumah + '</td>';
+                htmlExcel += '<td class="text-right">' + w.totalTarifPersonal + '</td>';
+                htmlExcel += '<td class="text-center">' + w.statusBayar + '</td>';
+                htmlExcel += '<td class="text-center">' + w.tglBayar + '</td>';
+                htmlExcel += '</tr>';
             });
+            htmlExcel += '</table>';
 
-            csv += `\nCATATAN BUKU KAS TRANSAKSI\n`;
-            csv += `Tanggal;Jenis;Kategori;Keterangan;Metode;Nominal\n`;
+            htmlExcel += '<br>';
+
+            // Tabel Buku Kas Transaksi
+            htmlExcel += '<h4>Catatan Buku Kas Transaksi</h4>';
+            htmlExcel += '<table>';
+            htmlExcel += '<tr><th>Tanggal</th><th>Jenis Arus Kas</th><th>Kategori</th><th>Keterangan</th><th>Metode</th><th>Nominal</th></tr>';
+
             dataTransaksi.forEach(t => {
-                csv += `"${t.tanggal}";"${t.jenis}";"${t.kategori}";"${t.keterangan}";"${t.metode}";"${t.nominal}"\n`;
+                htmlExcel += '<tr>';
+                htmlExcel += '<td class="text-center">' + t.tanggal + '</td>';
+                htmlExcel += '<td class="text-center">' + t.jenis + '</td>';
+                htmlExcel += '<td>' + t.kategori + '</td>';
+                htmlExcel += '<td>' + t.keterangan + '</td>';
+                htmlExcel += '<td class="text-center">' + (t.metode || '-') + '</td>';
+                htmlExcel += '<td class="text-right">' + t.nominal + '</td>';
+                htmlExcel += '</tr>';
             });
+            htmlExcel += '</table>';
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            htmlExcel += '</body></html>';
+
+            const blob = new Blob([htmlExcel], { type: 'application/vnd.ms-excel' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Laporan_Keuangan_TKB_${bulan}_${tahun}.csv`;
+            a.download = 'Laporan_Keuangan_TKB_' + bulan + '_' + tahun + '.xls';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
         };
 
+        window.handlePrintReport = function() {
+            try {
+                const printWindow = window.open('', '_blank', 'width=1000,height=800');
+                if (!printWindow) {
+                    alert("Pop-up diblokir. Silakan izinkan pop-up untuk mencetak laporan.");
+                    return;
+                }
+
+                const bulan = document.getElementById('filterBulan').value;
+                const tahun = document.getElementById('filterTahun').value;
+                const mainEl = document.querySelector('main');
+                let mainContentHtml = mainEl ? mainEl.innerHTML : '';
+
+                // Konversi semua canvas menjadi gambar base64 agar ikut tercetak
+                const originalCanvases = mainEl.querySelectorAll('canvas');
+                originalCanvases.forEach((canvas, idx) => {
+                    try {
+                        const dataUrl = canvas.toDataURL('image/png');
+                        // Cari canvas yang sama di dalam HTML yang akan di-print berdasarkan index
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = mainContentHtml;
+                        const targetCanvas = tempDiv.querySelectorAll('canvas')[idx];
+                        if (targetCanvas) {
+                            const img = document.createElement('img');
+                            img.src = dataUrl;
+                            img.style.maxWidth = '100%';
+                            img.style.height = 'auto';
+                            targetCanvas.parentNode.replaceChild(img, targetCanvas);
+                            mainContentHtml = tempDiv.innerHTML;
+                        }
+                    } catch (e) {
+                        console.warn("Gagal convert canvas:", e);
+                    }
+                });
+
+                printWindow.document.write('<!DOCTYPE html><html><head>');
+                printWindow.document.write('<title>Cetak Laporan Keuangan TKB - ' + bulan + ' ' + tahun + '</title>');
+                printWindow.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+                printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+                printWindow.document.write('<style>');
+                printWindow.document.write('body { font-family: Inter, Arial, sans-serif; background: #fff; color: #000; padding: 15px; }');
+                printWindow.document.write('header, .no-print, button, select, input, .admin-only { display: none !important; }');
+                printWindow.document.write('.tkb-card { box-shadow: none !important; border: 1px solid #999 !important; margin-bottom: 15px !important; page-break-inside: avoid; }');
+                printWindow.document.write('table { page-break-inside: auto; } tr { page-break-inside: avoid; page-break-after: auto; }');
+                printWindow.document.write('h1, h2, h3, h4, th { color: #000 !important; }');
+                printWindow.document.write('</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write('<div class="mb-4 text-center border-b-2 border-black pb-3">');
+                printWindow.document.write('<h1 style="font-size:22px; font-weight:900;">LAPORAN KEUANGAN PAGUYUBAN TKB</h1>');
+                printWindow.document.write('<p style="font-size:14px; font-weight:bold; margin-top:4px;">Periode: ' + bulan + ' ' + tahun + '</p>');
+                printWindow.document.write('</div>');
+                printWindow.document.write(mainContentHtml);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+
+                // Naikkan timeout ke 1500ms untuk beri waktu Tailwind & gambar load
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.focus();
+                        printWindow.print();
+                    }, 1200);
+                };
+            } catch (err) {
+                console.warn("Print error:", err);
+                window.print();
+            }
+        };
+        
         window.updateDashboard = function() {
             const bulan = document.getElementById('filterBulan').value;
             const tahun = document.getElementById('filterTahun').value;
@@ -3727,32 +3987,6 @@
         window.onload = function() {
             window.loadDataFromStorage();
             window.updateUiFromSettings();
-
-            // --- FITUR OTOMATIS DETEKSI BULAN & TAHUN ---
-            const now = new Date();
-            const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            const bulanSekarang = daftarBulan[now.getMonth()];
-            const tahunSekarang = now.getFullYear().toString();
-
-            const selectBulan = document.getElementById('filterBulan');
-            const selectTahun = document.getElementById('filterTahun');
-
-            // Set nilai dropdown ke bulan & tahun saat ini
-            if (selectBulan) selectBulan.value = bulanSekarang;
-            
-            // Pastikan tahun saat ini ada di dalam pilihan dropdown
-            if (selectTahun) {
-                let optionTahun = Array.from(selectTahun.options).find(opt => opt.value === tahunSekarang);
-                if (!optionTahun) {
-                    // Jika tahun belum ada di list, tambahkan otomatis
-                    let newOption = new Option(tahunSekarang, tahunSekarang);
-                    selectTahun.add(newOption);
-                }
-                selectTahun.value = tahunSekarang;
-            }
-            // --- AKHIR FITUR OTOMATIS DETEKSI ---
-
-            // Tampilkan data sesuai bulan & tahun yang baru terdeteksi
             window.updateDashboard();
             initFirebaseSync();
         };
