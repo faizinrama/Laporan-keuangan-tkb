@@ -3616,13 +3616,13 @@
 
                 // Konversi semua canvas menjadi gambar base64 agar ikut tercetak
                 const originalCanvases = mainEl.querySelectorAll('canvas');
-                originalCanvases.forEach((canvas, idx) => {
+                originalCanvases.forEach((canvas) => {
                     try {
+                        if (!canvas.id) return; // Lewati canvas tanpa ID
                         const dataUrl = canvas.toDataURL('image/png');
-                        // Cari canvas yang sama di dalam HTML yang akan di-print berdasarkan index
                         const tempDiv = document.createElement('div');
                         tempDiv.innerHTML = mainContentHtml;
-                        const targetCanvas = tempDiv.querySelectorAll('canvas')[idx];
+                        const targetCanvas = tempDiv.querySelector('#' + canvas.id); // Cari berdasarkan ID, bukan index
                         if (targetCanvas) {
                             const img = document.createElement('img');
                             img.src = dataUrl;
@@ -3657,12 +3657,19 @@
                 printWindow.document.close();
 
                 // Naikkan timeout ke 1500ms untuk beri waktu Tailwind & gambar load
-                printWindow.onload = function() {
-                    setTimeout(() => {
-                        printWindow.focus();
-                        printWindow.print();
-                    }, 1200);
+                let printTriggered = false;
+                const doPrint = () => {
+                    if (printTriggered || !printWindow || printWindow.closed) return;
+                    printTriggered = true;
+                    printWindow.focus();
+                    printWindow.print();
                 };
+                
+                printWindow.onload = function() {
+                    setTimeout(doPrint, 1200);
+                };
+                // Fallback jika onload tidak fire
+                setTimeout(doPrint, 2500);
             } catch (err) {
                 console.warn("Print error:", err);
                 window.print();
@@ -3987,6 +3994,34 @@
         window.onload = function() {
             window.loadDataFromStorage();
             window.updateUiFromSettings();
+
+            // --- FITUR OTOMATIS DETEKSI BULAN & TAHUN ---
+            const now = new Date();
+            const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            // Mengambil bulan dan tahun saat ini
+            const bulanSekarang = daftarBulan[now.getMonth()];
+            const tahunSekarang = now.getFullYear().toString();
+
+            const selectBulan = document.getElementById('filterBulan');
+            const selectTahun = document.getElementById('filterTahun');
+
+            // Mengubah pilihan dropdown sesuai tanggal hari ini
+            if (selectBulan) selectBulan.value = bulanSekarang;
+            
+            if (selectTahun) {
+                // Cek apakah tahun saat ini ada di dalam daftar pilihan dropdown
+                let optionTahun = Array.from(selectTahun.options).find(opt => opt.value === tahunSekarang);
+                
+                // Jika tahun belum ada (misal tahun 2024), tambahkan otomatis
+                if (!optionTahun) {
+                    let newOption = new Option(tahunSekarang, tahunSekarang);
+                    selectTahun.add(newOption);
+                }
+                selectTahun.value = tahunSekarang;
+            }
+            // --- AKHIR FITUR OTOMATIS DETEKSI ---
+
             window.updateDashboard();
             initFirebaseSync();
         };
