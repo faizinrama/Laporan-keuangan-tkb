@@ -2505,13 +2505,13 @@
                 databasePeriode[key].isManualCalibrated = false;
             }
 
-            const saldoAwalDinamis = window.getSaldoAwalDinamis(bulan, tahun);
-            activeKasTunaiAwal = saldoAwalDinamis;
-            activeKasBankAwal = 0;
-
+            const saldoAwalSplit = window.getSaldoAwalDinamisSplit(bulan, tahun);
+            activeKasTunaiAwal = saldoAwalSplit.tunai;
+            activeKasBankAwal = saldoAwalSplit.bank;
+        
             if (databasePeriode[key]) {
-                databasePeriode[key].kasTunai = saldoAwalDinamis;
-                databasePeriode[key].kasBank = 0;
+                databasePeriode[key].kasTunai = saldoAwalSplit.tunai;
+                databasePeriode[key].kasBank = saldoAwalSplit.bank;
             }
 
             document.getElementById('settingKasTunai').value = activeKasTunaiAwal;
