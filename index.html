@@ -341,79 +341,113 @@
 
             <!-- SUB-VIEW 1.1: RINGKASAN BULAN INIS -->
             <div id="subViewBulanan" class="space-y-6">
-                <!-- Summary Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-500 shadow-md hover:shadow-lg transition">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
-                            <i class="fa-solid fa-user-check"></i>
+                <!-- Info Alokasi Pengelolaan Kas (Pusat vs Ketua Lingkungan) -->
+                <div class="p-3.5 bg-gradient-to-r from-amber-50 via-teal-50 to-emerald-50 border-2 border-emerald-300 rounded-2xl shadow-sm text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center text-lg shrink-0 shadow">
+                            <i class="fa-solid fa-sitemap"></i>
                         </div>
-                        <div class="w-full">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider">WARGA SUDAH MEMBAYAR</span>
-                                <span class="text-[10px] bg-emerald-200 text-emerald-900 font-extrabold px-2 py-0.5 rounded-full">Partisipasi</span>
-                            </div>
-                            <div class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mt-1 flex items-baseline gap-1.5 flex-wrap" id="statSudahBayar">0 / 0 <span class="text-xs sm:text-sm font-bold text-emerald-700">(0%)</span></div>
-                            <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
-                                <i class="fa-solid fa-circle-info text-emerald-600"></i> Warga membayar / total terdata
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-white border-2 border-teal-500 shadow-md hover:shadow-lg transition">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
-                            <i class="fa-solid fa-house-chimney"></i>
-                        </div>
-                        <div class="w-full">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-extrabold text-teal-900 uppercase tracking-wider">RUMAH TERDATA</span>
-                                <span class="text-[10px] bg-teal-200 text-teal-900 font-extrabold px-2 py-0.5 rounded-full">Master Data</span>
-                            </div>
-                            <div class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 mt-1" id="statTotalRumah">0</div>
-                            <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
-                                <i class="fa-solid fa-map-pin text-teal-600"></i> Jumlah unit rumah aktif di TKB
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tkb-card p-4 bg-slate-50 border-2 border-slate-300 shadow-sm col-span-1 md:col-span-2 lg:col-span-1">
-                        <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
-                            <span class="flex items-center gap-2">
-                                <i class="fa-solid fa-map-location-dot text-emerald-600"></i> INFORMASI WILAYAH
+                        <div>
+                            <span class="font-extrabold text-emerald-950 block text-sm">Informasi Pengelolaan & Tanggung Jawab Dana Iuran</span>
+                            <span class="text-slate-600 block text-[11px] mt-0.5">
+                                <strong class="text-emerald-800">Pusat (Bendahara / Admin):</strong> Kebersihan, Keamanan, & Paguyuban &bull; <strong class="text-teal-800">Ketua Lingkungan:</strong> Kas Lingkungan & Sosial (Dikelola mandiri per wilayah)
                             </span>
-                            <span class="text-[10px] text-emerald-700 bg-emerald-100 font-bold px-2 py-0.5 rounded-full">Progres Iuran</span>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 text-xs" id="boxInformasiWilayah">
-                            <div class="bg-white p-2 rounded border border-slate-200 flex flex-col justify-between">
-                                <div>
-                                    <span class="font-bold block text-emerald-700" id="cardL1Nama">Lingkungan 1</span>
-                                    <span class="text-slate-500 block text-[10px]" id="cardL1Ketua">Ketua: Bpk. Agus</span>
-                                    <span class="text-slate-600 font-medium block text-[10px] mb-1" id="cardL1Blok">Blok: K, L, M, N, O</span>
+                    </div>
+                    <span class="bg-white/80 border border-emerald-200 text-emerald-900 px-3 py-1.5 rounded-xl font-bold text-[10px] shadow-sm shrink-0">
+                        <i class="fa-solid fa-shield-halved text-emerald-700"></i> Sistem Transparansi Ganda
+                    </span>
+                </div>
+
+                <!-- Summary Stats Cards -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                    <!-- Left Column: Warga Sudah Membayar & Rumah Terdata Stacked Vertically -->
+                    <div class="lg:col-span-5 flex flex-col gap-4 justify-between">
+                        <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-500 shadow-md hover:shadow-lg transition flex-1">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-extrabold text-emerald-900 uppercase tracking-wider">WARGA SUDAH MEMBAYAR</span>
+                                    <span class="text-[10px] bg-emerald-200 text-emerald-900 font-extrabold px-2 py-0.5 rounded-full">Partisipasi</span>
                                 </div>
-                                <div class="pt-1.5 border-t border-slate-100 mt-1">
-                                    <span class="font-extrabold text-emerald-800 text-[11px] block" id="cardL1Stat">0/0 Bayar</span>
-                                    <span class="text-[9px] text-slate-500 font-semibold" id="cardL1Pct">(0%)</span>
+                                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1 flex items-baseline gap-1.5 flex-wrap" id="statSudahBayar">0 / 0 <span class="text-xs sm:text-sm font-bold text-emerald-700">(0%)</span></div>
+                                <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
+                                    <i class="fa-solid fa-circle-info text-emerald-600"></i> Warga membayar / total terdata
                                 </div>
                             </div>
-                            <div class="bg-white p-2 rounded border border-slate-200 flex flex-col justify-between">
-                                <div>
-                                    <span class="font-bold block text-emerald-700" id="cardL2Nama">Lingkungan 2</span>
-                                    <span class="text-slate-500 block text-[10px]" id="cardL2Ketua">Ketua: Bpk. Budi</span>
-                                    <span class="text-slate-600 font-medium block text-[10px] mb-1" id="cardL2Blok">Blok: A, B, C, D, E</span>
+                        </div>
+
+                        <div class="tkb-card p-4 flex items-center gap-4 bg-gradient-to-r from-teal-50 via-cyan-50 to-white border-2 border-teal-500 shadow-md hover:shadow-lg transition flex-1">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-700 text-white flex items-center justify-center text-2xl shadow-lg shrink-0">
+                                <i class="fa-solid fa-house-chimney"></i>
+                            </div>
+                            <div class="w-full">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-extrabold text-teal-900 uppercase tracking-wider">RUMAH TERDATA</span>
+                                    <span class="text-[10px] bg-teal-200 text-teal-900 font-extrabold px-2 py-0.5 rounded-full">Master Data</span>
                                 </div>
-                                <div class="pt-1.5 border-t border-slate-100 mt-1">
-                                    <span class="font-extrabold text-emerald-800 text-[11px] block" id="cardL2Stat">0/0 Bayar</span>
-                                    <span class="text-[9px] text-slate-500 font-semibold" id="cardL2Pct">(0%)</span>
+                                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1" id="statTotalRumah">0</div>
+                                <div class="text-[11px] text-slate-600 mt-0.5 flex items-center gap-1 font-medium">
+                                    <i class="fa-solid fa-map-pin text-teal-600"></i> Jumlah unit rumah aktif di TKB
                                 </div>
                             </div>
-                            <div class="bg-white p-2 rounded border border-slate-200 flex flex-col justify-between">
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Informasi Wilayah (Larger & Prominent) -->
+                    <div class="lg:col-span-7 tkb-card p-5 bg-slate-50 border-2 border-slate-300 shadow-sm flex flex-col justify-between">
+                        <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="flex items-center gap-2 text-sm text-emerald-900 font-black">
+                                <i class="fa-solid fa-map-location-dot text-emerald-600 text-base"></i> INFORMASI WILAYAH & KAS MANDIRI
+                            </span>
+                            <span class="text-[10px] text-emerald-700 bg-emerald-100 font-extrabold px-2.5 py-1 rounded-full">Progres & Pengelolaan</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs" id="boxInformasiWilayah">
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition">
                                 <div>
-                                    <span class="font-bold block text-emerald-700" id="cardL3Nama">Lingkungan 3</span>
-                                    <span class="text-slate-500 block text-[10px]" id="cardL3Ketua">Ketua: Bpk. Candra</span>
-                                    <span class="text-slate-600 font-medium block text-[10px] mb-1" id="cardL3Blok">Blok: F, G, H, I, J</span>
+                                    <span class="font-extrabold block text-emerald-800 text-sm mb-0.5" id="cardL1Nama">Lingkungan 1</span>
+                                    <span class="text-slate-600 block text-[11px] font-medium" id="cardL1Ketua">Ketua: Bpk. Agus</span>
+                                    <span class="text-slate-500 block text-[10px] mb-2.5 font-medium" id="cardL1Blok">Blok: K, L, M, N, O</span>
+                                    <div class="bg-amber-50/80 p-2 rounded-lg border border-amber-200 mb-2 text-[10px]">
+                                        <span class="text-amber-900 block font-bold mb-0.5"><i class="fa-solid fa-wallet text-amber-700"></i> Pegangan Ketua:</span>
+                                        <span class="font-black text-amber-950 block text-xs" id="cardL1DanaMandiri">Rp 0</span>
+                                    </div>
                                 </div>
-                                <div class="pt-1.5 border-t border-slate-100 mt-1">
-                                    <span class="font-extrabold text-emerald-800 text-[11px] block" id="cardL3Stat">0/0 Bayar</span>
-                                    <span class="text-[9px] text-slate-500 font-semibold" id="cardL3Pct">(0%)</span>
+                                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="font-extrabold text-emerald-800 text-xs" id="cardL1Stat">0/0 Bayar</span>
+                                    <span class="text-[10px] text-slate-500 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" id="cardL1Pct">(0%)</span>
+                                </div>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-teal-300 transition">
+                                <div>
+                                    <span class="font-extrabold block text-emerald-800 text-sm mb-0.5" id="cardL2Nama">Lingkungan 2</span>
+                                    <span class="text-slate-600 block text-[11px] font-medium" id="cardL2Ketua">Ketua: Bpk. Budi</span>
+                                    <span class="text-slate-500 block text-[10px] mb-2.5 font-medium" id="cardL2Blok">Blok: A, B, C, D, E</span>
+                                    <div class="bg-amber-50/80 p-2 rounded-lg border border-amber-200 mb-2 text-[10px]">
+                                        <span class="text-amber-900 block font-bold mb-0.5"><i class="fa-solid fa-wallet text-amber-700"></i> Pegangan Ketua:</span>
+                                        <span class="font-black text-amber-950 block text-xs" id="cardL2DanaMandiri">Rp 0</span>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="font-extrabold text-emerald-800 text-xs" id="cardL2Stat">0/0 Bayar</span>
+                                    <span class="text-[10px] text-slate-500 font-bold bg-teal-50 px-1.5 py-0.5 rounded" id="cardL2Pct">(0%)</span>
+                                </div>
+                            </div>
+                            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-cyan-300 transition">
+                                <div>
+                                    <span class="font-extrabold block text-emerald-800 text-sm mb-0.5" id="cardL3Nama">Lingkungan 3</span>
+                                    <span class="text-slate-600 block text-[11px] font-medium" id="cardL3Ketua">Ketua: Bpk. Candra</span>
+                                    <span class="text-slate-500 block text-[10px] mb-2.5 font-medium" id="cardL3Blok">Blok: F, G, H, I, J</span>
+                                    <div class="bg-amber-50/80 p-2 rounded-lg border border-amber-200 mb-2 text-[10px]">
+                                        <span class="text-amber-900 block font-bold mb-0.5"><i class="fa-solid fa-wallet text-amber-700"></i> Pegangan Ketua:</span>
+                                        <span class="font-black text-amber-950 block text-xs" id="cardL3DanaMandiri">Rp 0</span>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="font-extrabold text-emerald-800 text-xs" id="cardL3Stat">0/0 Bayar</span>
+                                    <span class="text-[10px] text-slate-500 font-bold bg-cyan-50 px-1.5 py-0.5 rounded" id="cardL3Pct">(0%)</span>
                                 </div>
                             </div>
                         </div>
@@ -449,11 +483,23 @@
                                 <i class="fa-solid fa-circle-check text-amber-300"></i> Total Saldo Kas Bersih Realized Per Akhir Periode
                             </p>
                         </div>
-                        <div class="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/25 text-xs self-start md:self-auto min-w-[190px] shadow-inner">
-                            <span class="block text-[10px] font-bold text-emerald-100 uppercase tracking-wider mb-1">Status Keuangan</span>
-                            <div class="flex items-center gap-2 font-extrabold text-amber-300 text-xs sm:text-sm">
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <span>Kas Sehat & Transparan</span>
+                        <div class="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/25 text-xs self-start md:self-auto min-w-[240px] shadow-inner space-y-1.5">
+                            <span class="block text-[10px] font-bold text-emerald-100 uppercase tracking-wider mb-1 border-b border-white/20 pb-1">Distribusi Pemegang Kas</span>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-emerald-100"><i class="fa-solid fa-user-shield text-amber-300"></i> Pegangan Admin:</span>
+                                <span class="font-black text-white" id="kpiSaldoAdmin">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-emerald-100"><i class="fa-solid fa-wallet text-amber-300"></i> Ketua Lingkungan 1:</span>
+                                <span class="font-black text-amber-300" id="kpiSaldoL1">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-emerald-100"><i class="fa-solid fa-wallet text-amber-300"></i> Ketua Lingkungan 2:</span>
+                                <span class="font-black text-amber-300" id="kpiSaldoL2">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px]">
+                                <span class="text-emerald-100"><i class="fa-solid fa-wallet text-amber-300"></i> Ketua Lingkungan 3:</span>
+                                <span class="font-black text-amber-300" id="kpiSaldoL3">Rp 0</span>
                             </div>
                         </div>
                     </div>
@@ -540,25 +586,27 @@
                             <i class="fa-solid fa-receipt"></i> PENERIMAAN POS IURAN
                         </div>
                         <div class="p-3 text-xs space-y-2">
-                            <div class="text-[11px] text-slate-500 font-medium mb-1">Rincian dana masuk dari warga yang sudah bayar:</div>
+                            <div class="text-[10px] text-emerald-800 bg-emerald-50 p-2 rounded border border-emerald-200 font-semibold mb-2">
+                                <i class="fa-solid fa-circle-info text-emerald-700"></i> <strong>Pusat (Bendahara):</strong> Kebersihan, Keamanan, Paguyuban.<br><strong>Ketua Lingkungan:</strong> Sosial, Lingkungan.
+                            </div>
                             <div class="flex justify-between pb-1.5 border-b border-slate-100">
-                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-broom text-emerald-600 text-[10px]"></i> Kebersihan</span>
+                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-broom text-emerald-600 text-[10px]"></i> Kebersihan <span class="text-[9px] text-slate-400 font-normal">(Pusat)</span></span>
                                 <span class="font-bold text-slate-800" id="posDanaKebersihan">Rp 0</span>
                             </div>
                             <div class="flex justify-between pb-1.5 border-b border-slate-100">
-                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-600 text-[10px]"></i> Keamanan</span>
+                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-600 text-[10px]"></i> Keamanan <span class="text-[9px] text-slate-400 font-normal">(Pusat)</span></span>
                                 <span class="font-bold text-slate-800" id="posDanaKeamanan">Rp 0</span>
                             </div>
                             <div class="flex justify-between pb-1.5 border-b border-slate-100">
-                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-heart text-emerald-600 text-[10px]"></i> Kas Sosial</span>
+                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-heart text-amber-600 text-[10px]"></i> Kas Sosial <span class="text-[9px] text-amber-700 font-bold">(Wilayah)</span></span>
                                 <span class="font-bold text-slate-800" id="posDanaSosial">Rp 0</span>
                             </div>
                             <div class="flex justify-between pb-1.5 border-b border-slate-100">
-                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-tree text-emerald-600 text-[10px]"></i> Kas Lingkungan</span>
+                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-tree text-teal-600 text-[10px]"></i> Kas Lingkungan <span class="text-[9px] text-teal-700 font-bold">(Wilayah)</span></span>
                                 <span class="font-bold text-slate-800" id="posDanaLingkungan">Rp 0</span>
                             </div>
                             <div class="flex justify-between pb-1.5 border-b border-slate-100">
-                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-building-flag text-emerald-600 text-[10px]"></i> Kas Paguyuban</span>
+                                <span class="text-slate-600 flex items-center gap-1.5"><i class="fa-solid fa-building-flag text-emerald-600 text-[10px]"></i> Kas Paguyuban <span class="text-[9px] text-slate-400 font-normal">(Pusat)</span></span>
                                 <span class="font-bold text-slate-800" id="posDanaPaguyuban">Rp 0</span>
                             </div>
 
@@ -621,12 +669,36 @@
                 <div class="tkb-card overflow-hidden">
                     <div class="bg-emerald-800 text-white p-3 font-semibold text-sm flex items-center justify-between">
                         <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-piggy-bank"></i> SISA SALDO BERSIH SETIAP POS IURAN
+                            <i class="fa-solid fa-piggy-bank"></i> SISA SALDO BERSIH SETIAP POS IURAN (PENGELOLAAN BENDAHARA & KETUA LINGKUNGAN)
                         </span>
                         <span class="text-[10px] bg-emerald-700 px-2.5 py-0.5 rounded-full text-emerald-100 font-bold">Penerimaan dikurangi alokasi pengeluaran</span>
                     </div>
-                    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs" id="boxSisaPosContainer">
-                        <!-- Dynamically rendered with warning states if negative -->
+                    <div class="p-4 space-y-4">
+                        <!-- Group 1: Bendahara (Pusat) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="bg-emerald-100 text-emerald-900 text-[11px] font-extrabold px-3 py-1 rounded-lg uppercase tracking-wider border border-emerald-300">
+                                    <i class="fa-solid fa-user-shield text-emerald-700"></i> Dikelola Bendahara (Pusat)
+                                </span>
+                                <span class="text-xs text-slate-500 font-medium">Pos: Kebersihan, Keamanan, & Paguyuban</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs" id="boxSisaPosBendahara">
+                                <!-- Dynamically rendered -->
+                            </div>
+                        </div>
+
+                        <!-- Group 2: Ketua Lingkungan -->
+                        <div class="pt-3 border-t border-slate-200">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="bg-amber-100 text-amber-950 text-[11px] font-extrabold px-3 py-1 rounded-lg uppercase tracking-wider border border-amber-300">
+                                    <i class="fa-solid fa-wallet text-amber-700"></i> Dikelola Ketua Lingkungan (Wilayah) - Rincian per Lingkungan
+                                </span>
+                                <span class="text-xs text-slate-500 font-medium">Pos: Kas Sosial & Kas Lingkungan</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs" id="boxSisaPosKetua">
+                                <!-- Dynamically rendered -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1229,25 +1301,49 @@
                     </h3>
                     <span class="text-[10px] bg-emerald-600 text-white px-3 py-1 rounded-full font-bold shadow-sm">Akumulasi Warga Lunas</span>
                 </div>
+                
+                <div class="mb-3 p-2.5 bg-white border border-emerald-200 rounded-xl text-xs text-slate-700 flex flex-col sm:flex-row items-center justify-between gap-2 shadow-inner">
+                    <span class="font-semibold">
+                        <i class="fa-solid fa-circle-info text-emerald-700"></i> <strong>Pengelolaan Dana:</strong> 
+                        <span class="text-emerald-900 font-bold">Disetor ke Bendahara (Pusat):</span> Kebersihan, Keamanan, Paguyuban &bull; 
+                        <span class="text-teal-900 font-bold">Dipegang Ketua Lingkungan:</span> Sosial, Lingkungan
+                    </span>
+                </div>
+
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
                     <div class="bg-emerald-50/50 p-3 rounded-xl border-2 border-emerald-300 flex flex-col justify-between shadow-sm">
-                        <span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1"><i class="fa-solid fa-broom text-emerald-600"></i> Kebersihan</span>
+                        <div>
+                            <span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1"><i class="fa-solid fa-broom text-emerald-600"></i> Kebersihan</span>
+                            <span class="text-[9px] text-slate-500 block font-semibold mt-0.5">Disetor ke Pusat</span>
+                        </div>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosKebersihan">Rp 0</span>
                     </div>
-                    <div class="bg-teal-50/50 p-3 rounded-xl border-2 border-teal-300 flex flex-col justify-between shadow-sm">
-                        <span class="text-[11px] font-bold text-teal-800 flex items-center gap-1"><i class="fa-solid fa-shield-halved text-teal-600"></i> Keamanan</span>
+                    <div class="bg-emerald-50/50 p-3 rounded-xl border-2 border-emerald-300 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <span class="text-[11px] font-bold text-emerald-800 flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-600"></i> Keamanan</span>
+                            <span class="text-[9px] text-slate-500 block font-semibold mt-0.5">Disetor ke Pusat</span>
+                        </div>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosKeamanan">Rp 0</span>
                     </div>
                     <div class="bg-amber-50/50 p-3 rounded-xl border-2 border-amber-300 flex flex-col justify-between shadow-sm">
-                        <span class="text-[11px] font-bold text-amber-800 flex items-center gap-1"><i class="fa-solid fa-hand-holding-heart text-amber-600"></i> Kas Sosial</span>
+                        <div>
+                            <span class="text-[11px] font-bold text-amber-800 flex items-center gap-1"><i class="fa-solid fa-hand-holding-heart text-amber-600"></i> Kas Sosial</span>
+                            <span class="text-[9px] text-amber-700 block font-bold mt-0.5">Ketua Lingkungan</span>
+                        </div>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosSosial">Rp 0</span>
                     </div>
-                    <div class="bg-purple-50/50 p-3 rounded-xl border-2 border-purple-300 flex flex-col justify-between shadow-sm">
-                        <span class="text-[11px] font-bold text-purple-800 flex items-center gap-1"><i class="fa-solid fa-tree text-purple-600"></i> Kas Lingkungan</span>
+                    <div class="bg-teal-50/50 p-3 rounded-xl border-2 border-teal-300 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <span class="text-[11px] font-bold text-teal-800 flex items-center gap-1"><i class="fa-solid fa-tree text-teal-600"></i> Kas Lingkungan</span>
+                            <span class="text-[9px] text-teal-700 block font-bold mt-0.5">Ketua Lingkungan</span>
+                        </div>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosLingkungan">Rp 0</span>
                     </div>
                     <div class="bg-sky-50/50 p-3 rounded-xl border-2 border-sky-300 flex flex-col justify-between col-span-2 sm:col-span-1 shadow-sm">
-                        <span class="text-[11px] font-bold text-sky-800 flex items-center gap-1"><i class="fa-solid fa-building-flag text-sky-600"></i> Kas Paguyuban</span>
+                        <div>
+                            <span class="text-[11px] font-bold text-sky-800 flex items-center gap-1"><i class="fa-solid fa-building-flag text-sky-600"></i> Kas Paguyuban</span>
+                            <span class="text-[9px] text-slate-500 block font-semibold mt-0.5">Disetor ke Pusat</span>
+                        </div>
                         <span class="text-sm font-black text-slate-900 mt-2" id="rekapPosPaguyuban">Rp 0</span>
                     </div>
                 </div>
@@ -1444,9 +1540,14 @@
                                 <label class="font-bold text-slate-800 flex items-center gap-1.5">
                                     <i class="fa-solid fa-wallet text-emerald-600"></i> Saldo Kas Awal Bulan Berjalan
                                 </label>
-                                <span class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2 py-0.5 rounded-full uppercase" id="badgeSettingBulanBerjalan">Oktober 2026</span>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="window.resetUnlockKasAwal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-[10px] px-2 py-0.5 rounded-lg font-bold transition flex items-center gap-1 shadow-sm" title="Kembalikan ke fungsi semula sesuai saldo bulan sebelumnya">
+                                        <i class="fa-solid fa-unlock-keyhole"></i> Reset / Unlock Otomatis
+                                    </button>
+                                    <span class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2 py-0.5 rounded-full uppercase" id="badgeSettingBulanBerjalan">Oktober 2026</span>
+                                </div>
                             </div>
-                            <p class="text-[11px] text-slate-500 mb-3">Gunakan opsi ini jika saldo awal bulan berjalan perlu dikalibrasi ulang.</p>
+                            <p class="text-[11px] text-slate-500 mb-3">Gunakan opsi ini jika saldo awal bulan berjalan perlu dikalibrasi ulang atau di-reset kembali ke nilai otomatis bulan sebelumnya.</p>
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
@@ -2187,8 +2288,33 @@
             
             if (!databasePeriode[key]) {
                 let freshIuran = {};
+                
+                // Cari data bulan sebelumnya untuk sinkronisasi otomatis status iuran warga
+                const idxBulan = DAFTAR_BULAN.indexOf(bulan);
+                let prevKey = null;
+                if (idxBulan > 0) {
+                    prevKey = `${DAFTAR_BULAN[idxBulan - 1]}_${tahun}`;
+                } else {
+                    prevKey = `Desember_${parseInt(tahun) - 1}`;
+                }
+                
+                const prevPeriodeData = databasePeriode[prevKey];
+
                 masterWarga.forEach(w => {
-                    freshIuran[w.id] = { statusBayar: "Belum Bayar", tglBayar: "-", tunggakan: 0 };
+                    let defaultStatus = "Belum Bayar";
+                    let defaultTgl = "-";
+                    let defaultTunggakan = 0;
+
+                    // Jika bulan sebelumnya warga berstatus Sudah Bayar, sinkronkan atau berikan opsi
+                    if (prevPeriodeData && prevPeriodeData.iuranWarga && prevPeriodeData.iuranWarga[w.id]) {
+                        const prevStatus = prevPeriodeData.iuranWarga[w.id].statusBayar;
+                        // Secara default di bulan baru dimulai sebagai Belum Bayar, 
+                        // namun kita bisa menyelaraskan preferensi atau mencatat riwayat konsistensi jika diinginkan.
+                        // Sesuai sistem kas standar, iuran bulanan baru bernilai Belum Bayar di awal bulan,
+                        // namun riwayat dan akumulasi kas mengikuti saldo kelanjutan bulan sebelumnya.
+                    }
+
+                    freshIuran[w.id] = { statusBayar: defaultStatus, tglBayar: defaultTgl, tunggakan: defaultTunggakan };
                 });
 
                 databasePeriode[key] = {
@@ -2319,6 +2445,37 @@
             document.getElementById('settingL3Nama').value = settings.lingkungan3.nama;
             document.getElementById('settingL3Ketua').value = settings.lingkungan3.ketua;
             document.getElementById('settingL3Blok').value = settings.lingkungan3.blok;
+        };
+
+        window.resetUnlockKasAwal = function() {
+            const key = window.getSelectedKey();
+            const bulan = document.getElementById('filterBulan').value;
+            const tahun = document.getElementById('filterTahun').value;
+
+            if (databasePeriode[key]) {
+                databasePeriode[key].isManualCalibrated = false;
+            }
+
+            const saldoAwalDinamis = window.getSaldoAwalDinamis(bulan, tahun);
+            activeKasTunaiAwal = saldoAwalDinamis;
+            activeKasBankAwal = 0;
+
+            if (databasePeriode[key]) {
+                databasePeriode[key].kasTunai = saldoAwalDinamis;
+                databasePeriode[key].kasBank = 0;
+            }
+
+            document.getElementById('settingKasTunai').value = activeKasTunaiAwal;
+            document.getElementById('settingKasBank').value = activeKasBankAwal;
+
+            window.saveDataToCloud();
+            window.updateDashboard();
+
+            const notif = document.createElement('div');
+            notif.className = "fixed bottom-5 right-5 bg-emerald-700 text-white px-5 py-3 rounded-lg shadow-2xl z-50 text-xs font-bold flex items-center gap-2 animate-bounce";
+            notif.innerHTML = '<i class="fa-solid fa-unlock text-base text-amber-300"></i> Saldo awal berhasil di-reset & dikembalikan ke sinkronisasi otomatis bulan sebelumnya!';
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
         };
 
         window.savePengaturanGlobal = function() {
@@ -3682,6 +3839,9 @@
             
             window.loadPeriodeData();
 
+            const keyAktif = window.getSelectedKey();
+            const pAktif = databasePeriode[keyAktif] || { iuranWarga: {}, transaksi: [] };
+
             document.getElementById('sideBulan').innerText = `${bulan} ${tahun}`;
             document.getElementById('textPeriodeTabel').innerText = `Periode: ${bulan} ${tahun}`;
             document.getElementById('labelBannerPeriode').innerText = `${bulan} ${tahun}`;
@@ -3709,14 +3869,63 @@
             let totalCashIuran = 0;
             let totalOnlineIuran = 0;
 
-            const keyAktif = window.getSelectedKey();
-            const pAktif = databasePeriode[keyAktif] || { iuranWarga: {} };
+            let danaMandiriL1 = 0;
+            let danaMandiriL2 = 0;
+            let danaMandiriL3 = 0;
+
+            // Hitung akumulasi historis sisa sebelumnya untuk kas mandiri ketua lingkungan (Sosial + Lingkungan)
+            function getAkumulasiKasMandiriSebelumnya(targetLingkungan, sampaiBulan, sampaiTahun) {
+                let akumulasi = 0;
+                const idxTarget = DAFTAR_BULAN.indexOf(sampaiBulan);
+                let numTahun = parseInt(sampaiTahun);
+
+                // Cek 12 bulan ke belakang sebelum periode aktif
+                let currIdx = idxTarget - 1;
+                let currTahun = numTahun;
+
+                for (let i = 0; i < 12; i++) {
+                    if (currIdx < 0) {
+                        currIdx = 11;
+                        currTahun -= 1;
+                    }
+                    const kLalu = `${DAFTAR_BULAN[currIdx]}_${currTahun}`;
+                    const pLalu = databasePeriode[kLalu];
+                    if (pLalu && pLalu.iuranWarga) {
+                        Object.keys(pLalu.iuranWarga).forEach(wId => {
+                            const info = pLalu.iuranWarga[wId];
+                            if (info.statusBayar === 'Sudah Bayar') {
+                                const wObj = masterWarga.find(x => x.id == wId);
+                                if (wObj) {
+                                    const isTargetL = (targetLingkungan === 'Lingkungan 1' && (wObj.lingkungan === 'Lingkungan 1' || wObj.lingkungan === settings.lingkungan1.nama)) ||
+                                                      (targetLingkungan === 'Lingkungan 2' && (wObj.lingkungan === 'Lingkungan 2' || wObj.lingkungan === settings.lingkungan2.nama)) ||
+                                                      (targetLingkungan === 'Lingkungan 3' && (wObj.lingkungan === 'Lingkungan 3' || wObj.lingkungan === settings.lingkungan3.nama));
+                                    if (isTargetL) {
+                                        const pos = wObj.posDiikuti || { kebersihan: true, keamanan: true, sosial: true, lingkungan: true, paguyuban: true };
+                                        if (pos.sosial) akumulasi += settings.tarifSosial;
+                                        if (pos.lingkungan) akumulasi += settings.tarifLingkungan;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    currIdx--;
+                }
+                return akumulasi;
+            }
+
+            const prevMandiriL1 = getAkumulasiKasMandiriSebelumnya('Lingkungan 1', bulan, tahun);
+            const prevMandiriL2 = getAkumulasiKasMandiriSebelumnya('Lingkungan 2', bulan, tahun);
+            const prevMandiriL3 = getAkumulasiKasMandiriSebelumnya('Lingkungan 3', bulan, tahun);
 
             dataWarga.forEach(w => {
                 let target = null;
-                if (w.lingkungan === 'Lingkungan 1' || w.lingkungan === settings.lingkungan1.nama) target = rekapL1;
-                else if (w.lingkungan === 'Lingkungan 2' || w.lingkungan === settings.lingkungan2.nama) target = rekapL2;
-                else if (w.lingkungan === 'Lingkungan 3' || w.lingkungan === settings.lingkungan3.nama) target = rekapL3;
+                let isL1 = (w.lingkungan === 'Lingkungan 1' || w.lingkungan === settings.lingkungan1.nama);
+                let isL2 = (w.lingkungan === 'Lingkungan 2' || w.lingkungan === settings.lingkungan2.nama);
+                let isL3 = (w.lingkungan === 'Lingkungan 3' || w.lingkungan === settings.lingkungan3.nama);
+
+                if (isL1) target = rekapL1;
+                else if (isL2) target = rekapL2;
+                else if (isL3) target = rekapL3;
 
                 const pos = w.posDiikuti || { kebersihan: true, keamanan: true, sosial: true, lingkungan: true, paguyuban: true };
 
@@ -3730,18 +3939,29 @@
 
                         target.uangMasuk += nominalRiil;
 
+                        let kontribusiWargaMandiri = 0;
                         if (pos.kebersihan) danaKebersihan += settings.tarifKebersihan;
                         if (pos.keamanan) danaKeamanan += settings.tarifKeamanan;
-                        if (pos.sosial) danaSosial += settings.tarifSosial;
-                        if (pos.lingkungan) danaLingkungan += settings.tarifLingkungan;
+                        if (pos.sosial) {
+                            danaSosial += settings.tarifSosial;
+                            kontribusiWargaMandiri += settings.tarifSosial;
+                        }
+                        if (pos.lingkungan) {
+                            danaLingkungan += settings.tarifLingkungan;
+                            kontribusiWargaMandiri += settings.tarifLingkungan;
+                        }
                         if (pos.paguyuban) danaPaguyuban += settings.tarifPaguyuban;
+
+                        if (isL1) danaMandiriL1 += kontribusiWargaMandiri;
+                        else if (isL2) danaMandiriL2 += kontribusiWargaMandiri;
+                        else if (isL3) danaMandiriL3 += kontribusiWargaMandiri;
 
                         const matchedTrans = dataTransaksi.find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
                         if (matchedTrans) {
-                            if (matchedTrans.metode === 'Transfer Bank') {
-                                totalOnlineIuran += nominalRiil;
-                            } else {
+                            if ((matchedTrans.metode || '').toLowerCase().includes('tunai') || (matchedTrans.metode || '').toLowerCase().includes('cash')) {
                                 totalCashIuran += nominalRiil;
+                            } else {
+                                totalOnlineIuran += nominalRiil;
                             }
                         } else {
                             totalOnlineIuran += nominalRiil;
@@ -3768,12 +3988,15 @@
 
             document.getElementById('cardL1Stat').innerText = `${rekapL1.sudah}/${rekapL1.total} Bayar`;
             document.getElementById('cardL1Pct').innerText = `(${pctL1Stat}%)`;
+            document.getElementById('cardL1DanaMandiri').innerText = formatRupiah(danaMandiriL1);
 
             document.getElementById('cardL2Stat').innerText = `${rekapL2.sudah}/${rekapL2.total} Bayar`;
             document.getElementById('cardL2Pct').innerText = `(${pctL2Stat}%)`;
+            document.getElementById('cardL2DanaMandiri').innerText = formatRupiah(danaMandiriL2);
 
             document.getElementById('cardL3Stat').innerText = `${rekapL3.sudah}/${rekapL3.total} Bayar`;
             document.getElementById('cardL3Pct').innerText = `(${pctL3Stat}%)`;
+            document.getElementById('cardL3DanaMandiri').innerText = formatRupiah(danaMandiriL3);
 
             const totalPenerimaanIuranPos = danaKebersihan + danaKeamanan + danaSosial + danaLingkungan + danaPaguyuban;
 
@@ -3825,6 +4048,10 @@
             const sisaLingkungan = danaLingkungan - kategoriExp['Lingkungan'];
             const sisaPaguyuban = danaPaguyuban - (kategoriExp['Lain-lain'] || 0);
 
+            let kasL1Perorangan = prevMandiriL1 + danaMandiriL1;
+            let kasL2Perorangan = prevMandiriL2 + danaMandiriL2;
+            let kasL3Perorangan = prevMandiriL3 + danaMandiriL3;
+
             function buildSisaCardHTML(title, iconClass, val, normalBg, normalBorder, normalText, normalSub) {
                 const isMinus = val < 0;
                 const bgClass = isMinus ? 'bg-red-50 border-2 border-red-300 shadow-sm' : `${normalBg} border ${normalBorder}`;
@@ -3833,7 +4060,7 @@
                 const warningBadge = isMinus ? '<span class="text-[9px] bg-red-200 text-red-900 px-1.5 py-0.5 rounded font-extrabold uppercase mt-1 inline-flex items-center gap-1 w-fit"><i class="fa-solid fa-triangle-exclamation"></i> Defisit / Minus</span>' : '';
 
                 return `
-                    <div class="${bgClass} p-3 rounded-xl flex flex-col justify-between">
+                    <div class="${bgClass} p-3.5 rounded-xl flex flex-col justify-between shadow-sm">
                         <span class="${titleClass} flex items-center gap-1.5"><i class="${iconClass}"></i> ${title}</span>
                         <span class="${textClass} mt-2">${formatRupiah(val)}</span>
                         ${warningBadge}
@@ -3841,14 +4068,20 @@
                 `;
             }
 
-            const sisaContainer = document.getElementById('boxSisaPosContainer');
-            if (sisaContainer) {
-                sisaContainer.innerHTML = 
-                    buildSisaCardHTML('Kebersihan', 'fa-solid fa-broom text-emerald-600', sisaKebersihan, 'bg-emerald-50', 'border-emerald-200', 'text-emerald-950', 'text-emerald-900') +
-                    buildSisaCardHTML('Keamanan', 'fa-solid fa-shield-halved text-teal-600', sisaKeamanan, 'bg-teal-50', 'border-teal-200', 'text-teal-950', 'text-teal-900') +
-                    buildSisaCardHTML('Kas Sosial', 'fa-solid fa-hand-holding-heart text-amber-600', sisaSosial, 'bg-amber-50', 'border-amber-200', 'text-amber-950', 'text-amber-900') +
-                    buildSisaCardHTML('Kas Lingkungan', 'fa-solid fa-tree text-purple-600', sisaLingkungan, 'bg-purple-50', 'border-purple-200', 'text-purple-950', 'text-purple-900') +
-                    buildSisaCardHTML('Kas Paguyuban', 'fa-solid fa-building-flag text-sky-600', sisaPaguyuban, 'bg-sky-50', 'border-sky-200', 'text-sky-950', 'text-sky-900');
+            const boxSisaPosBendahara = document.getElementById('boxSisaPosBendahara');
+            if (boxSisaPosBendahara) {
+                boxSisaPosBendahara.innerHTML = 
+                    buildSisaCardHTML('Kebersihan', 'fa-solid fa-broom text-emerald-600', sisaKebersihan, 'bg-emerald-50/70', 'border-emerald-200', 'text-emerald-950', 'text-emerald-900') +
+                    buildSisaCardHTML('Keamanan', 'fa-solid fa-shield-halved text-teal-600', sisaKeamanan, 'bg-teal-50/70', 'border-teal-200', 'text-teal-950', 'text-teal-900') +
+                    buildSisaCardHTML('Kas Paguyuban', 'fa-solid fa-building-flag text-sky-600', sisaPaguyuban, 'bg-sky-50/70', 'border-sky-200', 'text-sky-950', 'text-sky-900');
+            }
+
+            const boxSisaPosKetua = document.getElementById('boxSisaPosKetua');
+            if (boxSisaPosKetua) {
+                boxSisaPosKetua.innerHTML = 
+                    buildSisaCardHTML(`${settings.lingkungan1.nama} (Sosial & Lingkungan)`, 'fa-solid fa-wallet text-amber-600', kasL1Perorangan, 'bg-amber-50/70', 'border-amber-200', 'text-amber-950', 'text-amber-900') +
+                    buildSisaCardHTML(`${settings.lingkungan2.nama} (Sosial & Lingkungan)`, 'fa-solid fa-wallet text-teal-600', kasL2Perorangan, 'bg-teal-50/70', 'border-teal-200', 'text-teal-950', 'text-teal-900') +
+                    buildSisaCardHTML(`${settings.lingkungan3.nama} (Sosial & Lingkungan)`, 'fa-solid fa-wallet text-cyan-600', kasL3Perorangan, 'bg-cyan-50/70', 'border-cyan-200', 'text-cyan-950', 'text-cyan-900');
             }
 
             const totalSaldoAwal = activeKasTunaiAwal + activeKasBankAwal;
@@ -3858,11 +4091,14 @@
             let currentMasukTunai = 0, currentMasukBank = 0;
             let currentKeluarTunai = 0, currentKeluarBank = 0;
             dataTransaksi.forEach(t => {
+                const mLower = (t.metode || '').toLowerCase();
+                const isTunai = mLower.includes('tunai') || mLower.includes('cash');
+
                 if (t.jenis === 'Penerimaan') {
-                    if (t.metode === 'Kas Tunai') currentMasukTunai += t.nominal;
+                    if (isTunai) currentMasukTunai += t.nominal;
                     else currentMasukBank += t.nominal;
                 } else if (t.jenis === 'Pengeluaran') {
-                    if (t.metode === 'Kas Tunai') currentKeluarTunai += t.nominal;
+                    if (isTunai) currentKeluarTunai += t.nominal;
                     else currentKeluarBank += t.nominal;
                 } else if (t.jenis === 'Transfer Internal') {
                     if (t.kategori === 'Setor Cash ke Bank') {
@@ -3877,8 +4113,31 @@
             const sisaTunaiVal = activeKasTunaiAwal + currentMasukTunai - currentKeluarTunai;
             const sisaBankVal = activeKasBankAwal + currentMasukBank - currentKeluarBank;
 
+            // Rincian distribusi pemegang kas: Admin hanya memegang Kebersihan, Keamanan, dan Paguyuban.
+            // Ketua Lingkungan memegang Kas Sosial dan Kas Lingkungan wilayah masing-masing.
+            const totalKasMandiriKetua = danaSosial + danaLingkungan;
+            const totalKasAdminPusat = danaKebersihan + danaKeamanan + danaPaguyuban;
+            
+            const totalPengeluaranOps = totalPengeluaran;
+            const kasAdminKotor = totalKasAdminPusat - (totalPengeluaranOps * (totalKasAdminPusat / (totalKasAdminPusat + totalKasMandiriKetua || 1)));
+            let safeSaldoAdmin = Math.max(0, (activeKasTunaiAwal + activeKasBankAwal) + kasAdminKotor);
+
+            // Pastikan total distribusi pemegang kas persis sama dengan Saldo Kas Akhir Bulan
+            const totalDistribusiSebelumnya = safeSaldoAdmin + kasL1Perorangan + kasL2Perorangan + kasL3Perorangan;
+            const selisihDistribusi = saldoAkhir - totalDistribusiSebelumnya;
+            if (selisihDistribusi !== 0) {
+                // Sesuai alur, sisa selisih (baik surplus atau pengeluaran umum) disesuaikan pada porsi pegangan admin
+                safeSaldoAdmin += selisihDistribusi;
+                if (safeSaldoAdmin < 0) safeSaldoAdmin = 0;
+            }
+
             document.getElementById('kpiSisaTunai').innerText = formatRupiah(sisaTunaiVal);
             document.getElementById('kpiSisaBank').innerText = formatRupiah(sisaBankVal);
+
+            document.getElementById('kpiSaldoAdmin').innerText = formatRupiah(safeSaldoAdmin);
+            document.getElementById('kpiSaldoL1').innerText = formatRupiah(kasL1Perorangan);
+            document.getElementById('kpiSaldoL2').innerText = formatRupiah(kasL2Perorangan);
+            document.getElementById('kpiSaldoL3').innerText = formatRupiah(kasL3Perorangan);
 
             document.getElementById('kpiSaldoAwal').innerText = formatRupiah(totalSaldoAwal);
             document.getElementById('kpiPenerimaan').innerText = formatRupiah(totalPenerimaan);
