@@ -3408,7 +3408,7 @@
                     masterWarga[idx] = { ...masterWarga[idx], nama, blok, lingkungan, statusRumah, posDiikuti };
                 }
             } else {
-                const newId = masterWarga.length > 0 ? Math.max(...masterWarga.map(x => x.id)) + 1 : 1;
+                const newId = Date.now();
                 masterWarga.push({ id: newId, nama, blok, lingkungan, statusRumah, posDiikuti });
             }
 
@@ -3434,6 +3434,10 @@
         window.confirmDeleteWarga = function() {
             if (targetDeleteWargaId) {
                 masterWarga = masterWarga.filter(x => x.id !== targetDeleteWargaId);
+                Object.keys(databasePeriode).forEach(k => {
+                    if (databasePeriode[k].iuranWarga)
+                        delete databasePeriode[k].iuranWarga[targetDeleteWargaId];
+                });
                 window.closeModalDeleteWarga();
                 window.saveDataToCloud();
                 window.updateDashboard();
