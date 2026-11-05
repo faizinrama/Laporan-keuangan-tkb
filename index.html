@@ -2281,6 +2281,55 @@
             return settings.kasTunaiAwal + settings.kasBankAwal;
         };
 
+                window.hitungSaldoAkhirSplit = function(p, saldoAwal) {
+            let tunai = saldoAwal.tunai;
+            let bank = saldoAwal.bank;
+            if (p.transaksi && Array.isArray(p.transaksi)) {
+                p.transaksi.forEach(t => {
+                    if (t.jenis === 'Penerimaan') {
+                        if (t.metode === 'Kas Tunai') tunai += t.nominal;
+                        else bank += t.nominal;
+                    } else if (t.jenis === 'Pengeluaran') {
+                        if (t.metode === 'Kas Tunai') tunai -= t.nominal;
+                        else bank -= t.nominal;
+                    } else if (t.jenis === 'Transfer Internal') {
+                        if (t.kategori === 'Setor Cash ke Bank') { tunai -= t.nominal; bank += t.nominal; }
+                        else if (t.kategori === 'Tarik Bank ke Cash') { bank -= t.nominal; tunai += t.nominal; }
+                    }
+                });
+            }
+            return { tunai, bank };
+        };
+
+        window.getSaldoAwalDinamisSplit = function(bulanTarget, tahunTarget) {
+            const idxBulan = DAFTAR_BULAN.indexOf(bulanTarget);
+            let numTahun = parseInt(tahunTarget);
+            if (idxBulan === -1 || isNaN(numTahun)) {
+                return { tunai: settings.kasTunaiAwal, bank: settings.kasBankAwal };
+            }
+            let currIdx = idxBulan - 1;
+            let currTahun = numTahun;
+            for (let i = 0; i < 60; i++) {
+                if (currIdx < 0) { currIdx = 11; currTahun -= 1; }
+                const keyLalu = `${DAFTAR_BULAN[currIdx]}_${currTahun}`;
+                const p = databasePeriode[keyLalu];
+                if (p) {
+                    const hasTransaksi = p.transaksi && p.transaksi.length > 0;
+                    const hasIuranLunas = p.iuranWarga && Object.values(p.iuranWarga).some(iw => iw.statusBayar === 'Sudah Bayar');
+                    if (p.isManualCalibrated) {
+                        const saldoAwalLalu = { tunai: p.kasTunai || 0, bank: p.kasBank || 0 };
+                        return window.hitungSaldoAkhirSplit(p, saldoAwalLalu);
+                    }
+                    if (hasTransaksi || hasIuranLunas) {
+                        const saldoAwalLalu = window.getSaldoAwalDinamisSplit(DAFTAR_BULAN[currIdx], currTahun.toString());
+                        return window.hitungSaldoAkhirSplit(p, saldoAwalLalu);
+                    }
+                }
+                currIdx--;
+            }
+            return { tunai: settings.kasTunaiAwal, bank: settings.kasBankAwal };
+        };
+
         window.loadPeriodeData = function() {
             const key = window.getSelectedKey();
             const bulan = document.getElementById('filterBulan').value;
@@ -2331,11 +2380,11 @@
                 activeKasTunaiAwal = activeData.kasTunai || 0;
                 activeKasBankAwal = activeData.kasBank || 0;
             } else {
-                const saldoAwalDinamis = window.getSaldoAwalDinamis(bulan, tahun);
-                activeData.kasTunai = saldoAwalDinamis;
-                activeData.kasBank = 0;
-                activeKasTunaiAwal = saldoAwalDinamis;
-                activeKasBankAwal = 0;
+                const saldoAwalSplit = window.getSaldoAwalDinamisSplit(bulan, tahun);
+                activeData.kasTunai = saldoAwalSplit.tunai;
+                activeData.kasBank = saldoAwalSplit.bank;
+                activeKasTunaiAwal = saldoAwalSplit.tunai;
+                activeKasBankAwal = saldoAwalSplit.bank;
             }
 
             dataTransaksi = activeData.transaksi;
