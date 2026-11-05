@@ -2152,8 +2152,8 @@
                 if (databasePeriode[keyLalu]) {
                     const p = databasePeriode[keyLalu];
                     
-                    if (p.isManualCalibrated) {
-                        return window.hitungSaldoAkhirPeriode(keyLalu);
+                    if (p.isManualCalibrated || p.isInitialized) {
+                        return (p.kasTunai || 0) + (p.kasBank || 0);
                     }
 
                     const hasTransaksi = p.transaksi && p.transaksi.length > 0;
@@ -2206,8 +2206,6 @@
                 activeKasBankAwal = activeData.kasBank || 0;
             } else {
                 const saldoAwalDinamis = window.getSaldoAwalDinamis(bulan, tahun);
-                activeData.kasTunai = saldoAwalDinamis;
-                activeData.kasBank = 0;
                 activeKasTunaiAwal = saldoAwalDinamis;
                 activeKasBankAwal = 0;
             }
@@ -2383,8 +2381,11 @@
             const kasTunaiInput = parseFloat(document.getElementById('settingKasTunai').value) || 0;
             const kasBankInput = parseFloat(document.getElementById('settingKasBank').value) || 0;
 
-            settings.kasTunaiAwal = kasTunaiInput;
-            settings.kasBankAwal = kasBankInput;
+            const keySave = window.getSelectedKey();
+            if (!databasePeriode[keySave]) databasePeriode[keySave] = { iuranWarga: {}, transaksi: [] };
+            databasePeriode[keySave].kasTunai = kasTunaiInput;
+            databasePeriode[keySave].kasBank = kasBankInput;
+            databasePeriode[keySave].isManualCalibrated = true;
 
             settings.namaPaguyuban = document.getElementById('settingNamaPaguyuban').value;
             settings.slogan = document.getElementById('settingSlogan').value;
