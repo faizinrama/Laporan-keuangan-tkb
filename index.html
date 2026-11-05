@@ -3296,7 +3296,10 @@
 
                 let metodeBayarBadge = '<span class="text-slate-400">-</span>';
                 if (isLunas) {
-                    const matchedTrans = (pAktif.transaksi || []).find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+                    const matchedTrans = (pAktif.transaksi || []).find(t => 
+                        t.kategori === 'Iuran Warga' && 
+                        (t.wargaId === w.id || (!t.wargaId && t.keterangan && t.keterangan.includes(`Iuran Bulanan ${w.nama}`)))
+                    );
                     const mName = matchedTrans ? (matchedTrans.metode || 'Transfer Bank') : 'Transfer Bank';
                     if (mName.toLowerCase().includes('tunai') || mName.toLowerCase().includes('cash')) {
                         metodeBayarBadge = '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-money-bill-wave"></i> Tunai</span>';
@@ -3520,7 +3523,8 @@
                 kategori: "Iuran Warga",
                 keterangan: `Iuran Bulanan ${w.nama} (${w.blok})`,
                 nominal: w.totalTarifPersonal,
-                metode: metode
+                metode: metode,
+                wargaId: w.id
             });
 
             window.closeModalConfirmBayar();
@@ -3558,7 +3562,11 @@
                 delete p.iuranWarga[w.id].nominalDibayar;
             }
 
-            p.transaksi = p.transaksi.filter(t => !t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+            p.transaksi = p.transaksi.filter(t => {
+                if (t.wargaId === w.id) return false;
+                if (!t.wargaId && t.keterangan && t.keterangan.includes(`Iuran Bulanan ${w.nama}`)) return false;
+                return true;
+            });
 
             window.closeModalConfirmUnbayar();
             window.saveDataToCloud();
@@ -3599,7 +3607,9 @@
                 p.iuranWarga[w.id].tglBayar = formatted;
             }
 
-            const tMatch = p.transaksi.find(t => t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+            const tMatch = p.transaksi.find(t => 
+                t.wargaId === w.id || (!t.wargaId && t.keterangan && t.keterangan.includes(`Iuran Bulanan ${w.nama}`))
+            );
             if (tMatch) {
                 tMatch.tanggal = rawDate;
             }
@@ -4009,7 +4019,10 @@
                         else if (isL2) danaMandiriL2 += kontribusiWargaMandiri;
                         else if (isL3) danaMandiriL3 += kontribusiWargaMandiri;
 
-                        const matchedTrans = dataTransaksi.find(t => t.kategori === 'Iuran Warga' && t.keterangan.includes(`Iuran Bulanan ${w.nama}`));
+                        const matchedTrans = dataTransaksi.find(t => 
+                            t.kategori === 'Iuran Warga' && 
+                            (t.wargaId === w.id || (!t.wargaId && t.keterangan && t.keterangan.includes(`Iuran Bulanan ${w.nama}`)))
+                        );
                         if (matchedTrans) {
                             if ((matchedTrans.metode || '').toLowerCase().includes('tunai') || (matchedTrans.metode || '').toLowerCase().includes('cash')) {
                                 totalCashIuran += nominalRiil;
